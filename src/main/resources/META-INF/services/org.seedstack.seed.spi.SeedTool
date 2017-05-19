@@ -1,0 +1,6 @@
+org.seedstack.flyway.internal.command.FlywayBaselineTool
+org.seedstack.flyway.internal.command.FlywayCleanTool
+org.seedstack.flyway.internal.command.FlywayInfoTool
+org.seedstack.flyway.internal.command.FlywayMigrateTool
+org.seedstack.flyway.internal.command.FlywayRepairTool
+org.seedstack.flyway.internal.command.FlywayValidateTool

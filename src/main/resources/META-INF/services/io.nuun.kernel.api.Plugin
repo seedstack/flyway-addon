@@ -1,0 +1,2 @@
+org.seedstack.flyway.internal.FlywayPlugin
+org.seedstack.flyway.internal.FlywayUpgradePlugin
