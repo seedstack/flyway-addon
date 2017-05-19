@@ -126,8 +126,7 @@ For the description of other global parameters, see the list below:
 | ignoreMissingMigrations      | false                          | Ignore missing migrations when reading the metadata table. These are migrations that were performed by an older deployment of the application that are no longer available in this version. |
 | ignoreFutureMigrations       | true                           | Ignore future migrations when reading the metadata table. These are migrations that were performed by a newer deployment of the application that are not yet available in this version.  |
 | cleanDisabled                | false                          | Whether to disable clean. This is especially useful for production environments where running clean can be quite a career limiting move. |
-| baselineOnMigrate            | false                          | Whether to automatically call baseline when migrate is executed against a non-empty schema with no metadata table. This schema will then be baselined with the `baselineVersion` before executing the migrations. Only migrations above baselineVersion will then be applied.
-This is useful for initial Flyway production deployments on projects with an existing DB. |
+| baselineOnMigrate            | false                          | Whether to automatically call baseline when migrate is executed against a non-empty schema with no metadata table. This schema will then be baselined with the `baselineVersion` before executing the migrations. Only migrations above baselineVersion will then be applied. This is useful for initial Flyway production deployments on projects with an existing DB. |
 | installedBy                  | Current database user          | The username that will be recorded in the metadata table as having applied the migration |
 
 # Migration Scripts
