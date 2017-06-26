@@ -7,17 +7,18 @@
  */
 package org.seedstack.flyway.spi;
 
-import java.util.Optional;
-
+import io.nuun.kernel.api.annotations.Facet;
 import org.flywaydb.core.Flyway;
 
+import java.util.Optional;
+
+@Facet
 public interface FlywayProvider {
-	
-	/**
+    /**
      * Provides a configured flyway by its name.
      *
-     * @param name the data source name.
-     * @return the flyway.
+     * @param name the data source name (as configured in JDBC add-on).
+     * @return the flyway object.
      */
-	public Optional<Flyway> getFlyway(String name);	
+    Optional<Flyway> getFlyway(String name);
 }
