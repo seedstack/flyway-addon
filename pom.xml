@@ -10,11 +10,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>org.seedstack.poms</groupId>
         <artifactId>parent-internal</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.0-SNAPSHOT</version>
     </parent>
 
     <groupId>org.seedstack.addons.flyway</groupId>
@@ -22,12 +21,15 @@
     <version>1.0.0-SNAPSHOT</version>
 
     <properties>
-        <seed.version>3.2.0</seed.version>
+        <seed.version>3.3.0-SNAPSHOT</seed.version>
         <jdbc-addon.version>3.0.2-SNAPSHOT</jdbc-addon.version>
-		<compatibility.skip>true</compatibility.skip>
+        <flyway.version>4.1.2</flyway.version>
+
+        <compatibility.skip>true</compatibility.skip>
+
         <bintray.package>flyway-addon</bintray.package>
     </properties>
-    
+
     <build>
         <pluginManagement>
             <plugins>
@@ -80,12 +82,12 @@
             <version>${jdbc-addon.version}</version>
         </dependency>
         <dependency>
-		    <groupId>org.flywaydb</groupId>
-		    <artifactId>flyway-core</artifactId>
-		    <version>4.1.2</version>
-		</dependency>
-		
-		<!-- TEST -->
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway.version}</version>
+        </dependency>
+
+        <!-- TEST -->
         <dependency>
             <groupId>org.seedstack.seed</groupId>
             <artifactId>seed-testing</artifactId>
@@ -97,13 +99,13 @@
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
             <scope>test</scope>
-        </dependency>   
+        </dependency>
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
             <version>2.3.3</version>
             <scope>test</scope>
-        </dependency>     	
+        </dependency>
     </dependencies>
 
     <scm>
