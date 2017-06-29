@@ -7,39 +7,36 @@
  */
 package org.seedstack.flyway.internal;
 
-import java.util.Collection;
-import java.util.Map;
-
+import com.google.common.collect.Lists;
+import io.nuun.kernel.api.plugin.InitState;
+import io.nuun.kernel.api.plugin.context.InitContext;
 import org.flywaydb.core.Flyway;
 import org.seedstack.jdbc.internal.JdbcPlugin;
 import org.seedstack.seed.core.internal.AbstractSeedTool;
-import org.seedstack.seed.core.internal.jndi.JndiPlugin;
 
-import com.google.common.collect.Lists;
+import java.util.Collection;
+import java.util.Map;
 
-import io.nuun.kernel.api.plugin.InitState;
-import io.nuun.kernel.api.plugin.context.InitContext;
+public abstract class AbstractFlywayTool extends AbstractSeedTool {
+    protected Map<String, Flyway> flywayMap;
+    protected Flyway flyway;
 
-public abstract class AbstractFlywayTool extends AbstractSeedTool {	
-	protected Map<String, Flyway> flywayMap;
-	protected Flyway flyway;
-	
-	@Override
-	public abstract String toolName();	
-		
-	@Override
-	public Collection<Class<?>> toolPlugins() {
-        return Lists.newArrayList(JdbcPlugin.class, JndiPlugin.class, FlywayPlugin.class);
+    @Override
+    public abstract String toolName();
+
+    @Override
+    public Collection<Class<?>> toolPlugins() {
+        return Lists.newArrayList(JdbcPlugin.class, FlywayPlugin.class);
     }
-	
-	@Override
-	public Collection<Class<?>> dependencies() {
+
+    @Override
+    public Collection<Class<?>> dependencies() {
         return Lists.newArrayList(FlywayPlugin.class);
     }
-	
-	@Override
-	public InitState initialize(InitContext initContext) {
-		flywayMap = initContext.dependency(FlywayPlugin.class).getAllFlyway();
-		return InitState.INITIALIZED;
-	}	
+
+    @Override
+    public InitState initialize(InitContext initContext) {
+        flywayMap = initContext.dependency(FlywayPlugin.class).getAllFlyway();
+        return InitState.INITIALIZED;
+    }
 }

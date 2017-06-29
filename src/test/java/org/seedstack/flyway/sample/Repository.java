@@ -19,15 +19,15 @@ import java.sql.SQLException;
 public class Repository {
     @Inject
     private Connection connection;
-    
+
     public String getBar(String tableName) throws SQLException {
         String sql = "Select * from " + tableName;
         PreparedStatement statement = connection.prepareStatement(sql);
         ResultSet resultSet = statement.executeQuery();
         if (resultSet.next()) {
-        	return resultSet.getString("Foo");
+            return resultSet.getString("Foo");
         }
-		return null;    	
+        return null;
     }
 
 }

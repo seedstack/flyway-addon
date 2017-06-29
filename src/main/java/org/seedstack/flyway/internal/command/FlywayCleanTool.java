@@ -11,33 +11,33 @@ import org.seedstack.flyway.internal.AbstractFlywayTool;
 import org.seedstack.seed.cli.CliOption;
 
 public class FlywayCleanTool extends AbstractFlywayTool {
-	
-	@CliOption(name = "f", longName="flyway", mandatory=true, valueCount=1)
-	private String flywayName;
-	
-	@CliOption(name = "s", longName="schemas", mandatory=false, valueCount=1)
-	private String schemas = null;
 
-	@Override
-	public String toolName() {
-		return "flyway-clean";
-	}
+    @CliOption(name = "f", longName = "flyway", mandatory = true, valueCount = 1)
+    private String flywayName;
 
-	@Override
-	public Integer call() throws Exception {
-		flyway = flywayMap.get(flywayName);
-		if(flyway == null) {
-			System.out.println("Error: the define flyway datasource [-f=" + flywayName + "] is not set");
-			return 0;
-		}
-		
-		if (this.schemas != null) {
-			flyway.setSchemas(this.schemas);
-		}
+    @CliOption(name = "s", longName = "schemas", mandatory = false, valueCount = 1)
+    private String schemas = null;
 
-		flyway.clean();
-		System.out.println("Flyway clean databasource: " + flywayName);
+    @Override
+    public String toolName() {
+        return "flyway-clean";
+    }
 
-		return 0;
-	}
+    @Override
+    public Integer call() throws Exception {
+        flyway = flywayMap.get(flywayName);
+        if (flyway == null) {
+            System.out.println("Error: the define flyway datasource [-f=" + flywayName + "] is not set");
+            return 0;
+        }
+
+        if (this.schemas != null) {
+            flyway.setSchemas(this.schemas);
+        }
+
+        flyway.clean();
+        System.out.println("Flyway clean databasource: " + flywayName);
+
+        return 0;
+    }
 }

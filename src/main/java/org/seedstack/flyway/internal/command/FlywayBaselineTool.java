@@ -12,53 +12,53 @@ import org.seedstack.seed.cli.CliOption;
 
 public class FlywayBaselineTool extends AbstractFlywayTool {
 
-	@CliOption(name = "f", longName="flyway", mandatory=true, valueCount=1)
-	private String flywayName;
+    @CliOption(name = "f", longName = "flyway", mandatory = true, valueCount = 1)
+    private String flywayName;
 
-	@CliOption(name = "s", longName="schemas", mandatory=false, valueCount=1)
-	private String schemas = null;
-	
-	@CliOption(name = "t", longName="table", mandatory=false, valueCount=1)
-	private String table = null;
-	
-	@CliOption(name = "bv", longName="baselineversion", mandatory=false, valueCount=1)
-	private String baselineVersion = null;
-	
-	@CliOption(name = "bd", longName="baselinedescription", mandatory=false, valueCount=1)
-	private String baselineDescription = null;
-		
-	@Override
-	public String toolName() {
-		return "flyway-baseline";
-	}
+    @CliOption(name = "s", longName = "schemas", mandatory = false, valueCount = 1)
+    private String schemas = null;
 
-	@Override
-	public Integer call() throws Exception {
-		flyway = flywayMap.get(flywayName);
-		if(flyway == null) {
-			System.out.println("Error: the define flyway datasource [-f=" + flywayName + "] is not set");
-			return 0;
-		}
-		
-		if (this.schemas != null) {
-			flyway.setSchemas(this.schemas);
-		}
-		
-		if (this.table != null) {
-			flyway.setTable(this.table);
-		}
-			
-		if (this.baselineVersion != null) {
-			flyway.setBaselineVersionAsString(this.baselineVersion);
-		}
-		
-		if (this.baselineDescription != null) {
-			flyway.setBaselineDescription(this.baselineDescription);
-		}
+    @CliOption(name = "t", longName = "table", mandatory = false, valueCount = 1)
+    private String table = null;
 
-		flyway.baseline();
-		System.out.println("Flyway baseline databasource [" + flywayName + "] to [" + flyway.getBaselineVersion() + "]");
+    @CliOption(name = "bv", longName = "baselineversion", mandatory = false, valueCount = 1)
+    private String baselineVersion = null;
 
-		return 0;
-	}
+    @CliOption(name = "bd", longName = "baselinedescription", mandatory = false, valueCount = 1)
+    private String baselineDescription = null;
+
+    @Override
+    public String toolName() {
+        return "flyway-baseline";
+    }
+
+    @Override
+    public Integer call() throws Exception {
+        flyway = flywayMap.get(flywayName);
+        if (flyway == null) {
+            System.out.println("Error: the define flyway datasource [-f=" + flywayName + "] is not set");
+            return 0;
+        }
+
+        if (this.schemas != null) {
+            flyway.setSchemas(this.schemas);
+        }
+
+        if (this.table != null) {
+            flyway.setTable(this.table);
+        }
+
+        if (this.baselineVersion != null) {
+            flyway.setBaselineVersionAsString(this.baselineVersion);
+        }
+
+        if (this.baselineDescription != null) {
+            flyway.setBaselineDescription(this.baselineDescription);
+        }
+
+        flyway.baseline();
+        System.out.println("Flyway baseline databasource [" + flywayName + "] to [" + flyway.getBaselineVersion() + "]");
+
+        return 0;
+    }
 }
