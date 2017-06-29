@@ -7,7 +7,6 @@
  */
 package org.seedstack.flyway;
 
-import net.jcip.annotations.NotThreadSafe;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,9 +20,7 @@ import javax.inject.Inject;
 import java.sql.SQLException;
 
 @RunWith(SeedITRunner.class)
-@NotThreadSafe
 public class FlywayIT extends AbstractSeedIT {
-
     @Inject
     private Repository repository;
 

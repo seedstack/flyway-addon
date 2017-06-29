@@ -7,43 +7,19 @@
 #
 
 jdbc:
-    datasources:
-        datasource1:
-            url: jdbc:hsqldb:mem:migrationdb
-        datasource2:
-            url: jdbc:hsqldb:mem:baselinedb
-        datasource3:
-            url: jdbc:hsqldb:mem:nomigration
-          
+  datasources:
+    datasource1:
+      url: jdbc:hsqldb:mem:migrationdb
+    datasource2:
+      url: jdbc:hsqldb:mem:baselinedb
+    datasource3:
+      url: jdbc:hsqldb:mem:nomigration
+    datasource4:
+      url: jdbc:hsqldb:mem:notouching
+
 flyway:
-    schemas:
-    table:
-    sqlMigrationPrefix:
-    repeatableSqlMigrationPrefix:
-    sqlMigrationSeparator:
-    sqlMigrationSuffix:
-    encoding:
-    placeholderReplacement:
-    placeholders.name:
-    placeholderPrefix:
-    placeholderSuffix:
-    resolvers:
-    skipDefaultCallResolvers:
-    callbacks:
-    skipDefaultCallbacks:
-    target:
-    outOfOrder:
-    validateOnMigrate:
-    cleanOnValidationError:
-    mixed:
-    group:
-    ignoreMissingMigrations:
-    ignoreFutureMigrations:
-    cleanDisabled:
-    baselineOnMigrate:
-    installedBy:          
-    datasources:
-        datasource2: 
-          baselineVersion: 1.1   
-          baselineDescription: baselineDescription
-        datasource3: false  
+  datasources:
+    datasource2:
+      baselineVersion: 1.1
+      baselineDescription: baselineDescription
+    datasource3: false

@@ -7,16 +7,20 @@
  */
 package org.seedstack.flyway.internal;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import io.nuun.kernel.api.plugin.InitState;
 import io.nuun.kernel.api.plugin.context.InitContext;
-import org.apache.commons.lang.StringUtils;
 import org.flywaydb.core.Flyway;
 import org.seedstack.flyway.FlywayConfig;
-import org.seedstack.flyway.FlywayConfig.FlywayDataSourceConfig;
+import org.seedstack.flyway.FlywayConfig.DataSourceConfig;
 import org.seedstack.flyway.spi.FlywayProvider;
 import org.seedstack.seed.core.internal.AbstractSeedPlugin;
+import org.seedstack.shed.ClassLoaders;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
@@ -25,6 +29,9 @@ import java.util.Optional;
  * This plugin manage automatic migration of databases.
  */
 public class FlywayUpgradePlugin extends AbstractSeedPlugin implements FlywayProvider {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FlywayUpgradePlugin.class);
+    private static final String CLASSPATH_PREFIX = "classpath:";
+    private static final String FILESYSTEM_PREFIX = "filesystem:";
     private FlywayPlugin flywayPlugin;
 
     @Override
@@ -40,26 +47,51 @@ public class FlywayUpgradePlugin extends AbstractSeedPlugin implements FlywayPro
     @Override
     public InitState initialize(InitContext initContext) {
         flywayPlugin = initContext.dependency(FlywayPlugin.class);
-        Map<String, FlywayDataSourceConfig> flywayDSConf = getConfiguration(FlywayConfig.class).getDatasources();
+        Map<String, DataSourceConfig> flywayDSConf = getConfiguration(FlywayConfig.class).getDataSources();
 
         flywayPlugin.getAllFlyway().forEach((dataSourceName, flyway) -> {
-            FlywayDataSourceConfig dataSourceConf = flywayDSConf.get(dataSourceName);
-            automaticMigration(flyway, dataSourceConf);
+            DataSourceConfig dataSourceConf = flywayDSConf.get(dataSourceName);
+            automaticMigration(flyway, dataSourceName, dataSourceConf);
         });
 
         return InitState.INITIALIZED;
     }
 
-    private void automaticMigration(Flyway flyway, FlywayDataSourceConfig dataSourceConf) {
+    private void automaticMigration(Flyway flyway, String dataSourceName, DataSourceConfig dataSourceConf) {
+        if (!locationExists(flyway)) {
+            // no migration if no script is present
+            LOGGER.info("Ignoring Flyway migration for datasource without scripts {}", dataSourceName);
+            return;
+        }
         if (dataSourceConf != null) {
-            if (!dataSourceConf.getEnabled()) {
-                return; // NoMigration
+            if (!dataSourceConf.isEnabled()) {
+                // no migration if explicitly disabled
+                LOGGER.info("Flyway migration is disabled for datasource {}", dataSourceName);
+                return;
             }
-            if (dataSourceConf.getBaselineVersion() != null && !StringUtils.isEmpty(dataSourceConf.getBaselineVersion())) {
+            if (!Strings.isNullOrEmpty(dataSourceConf.getBaselineVersion())) {
+                LOGGER.info("Baselining datasource {} to {}", dataSourceName, flyway.getBaselineVersion());
                 flyway.baseline();
             }
         }
+        LOGGER.info("Migrating datasource {} to {}", dataSourceName, flyway.getTarget());
         flyway.migrate();
+    }
+
+
+    private boolean locationExists(Flyway flyway) {
+        for (String location : flyway.getLocations()) {
+            if (location.startsWith(CLASSPATH_PREFIX)) {
+                if (ClassLoaders.findMostCompleteClassLoader().getResource(location.substring(CLASSPATH_PREFIX.length())) != null) {
+                    return true;
+                }
+            } else if (location.startsWith(FILESYSTEM_PREFIX)) {
+                if (new File(location.substring(FILESYSTEM_PREFIX.length())).exists()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override

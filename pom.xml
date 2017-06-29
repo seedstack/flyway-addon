@@ -23,7 +23,7 @@
     <properties>
         <seed.version>3.3.0-SNAPSHOT</seed.version>
         <jdbc-addon.version>3.0.2-SNAPSHOT</jdbc-addon.version>
-        <flyway.version>4.1.2</flyway.version>
+        <flyway.version>4.2.0</flyway.version>
 
         <compatibility.skip>true</compatibility.skip>
 

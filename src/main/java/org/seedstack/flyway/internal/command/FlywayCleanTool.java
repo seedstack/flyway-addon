@@ -7,17 +7,10 @@
  */
 package org.seedstack.flyway.internal.command;
 
+import org.flywaydb.core.Flyway;
 import org.seedstack.flyway.internal.AbstractFlywayTool;
-import org.seedstack.seed.cli.CliOption;
 
 public class FlywayCleanTool extends AbstractFlywayTool {
-
-    @CliOption(name = "f", longName = "flyway", mandatory = true, valueCount = 1)
-    private String flywayName;
-
-    @CliOption(name = "s", longName = "schemas", mandatory = false, valueCount = 1)
-    private String schemas = null;
-
     @Override
     public String toolName() {
         return "flyway-clean";
@@ -25,19 +18,9 @@ public class FlywayCleanTool extends AbstractFlywayTool {
 
     @Override
     public Integer call() throws Exception {
-        flyway = flywayMap.get(flywayName);
-        if (flyway == null) {
-            System.out.println("Error: the define flyway datasource [-f=" + flywayName + "] is not set");
-            return 0;
-        }
-
-        if (this.schemas != null) {
-            flyway.setSchemas(this.schemas);
-        }
-
+        Flyway flyway = getFlyway();
+        System.out.println("Flyway: cleaning datasource " + getDatasource());
         flyway.clean();
-        System.out.println("Flyway clean databasource: " + flywayName);
-
         return 0;
     }
 }
