@@ -20,6 +20,7 @@ jdbc:
 flyway:
   datasources:
     datasource2:
-      baselineVersion: 1.1
-      baselineDescription: baselineDescription
+      options:
+        baselineVersion: 1.1
+        baselineDescription: baselineDescription
     datasource3: false

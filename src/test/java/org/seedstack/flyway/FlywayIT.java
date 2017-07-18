@@ -19,6 +19,8 @@ import org.seedstack.seed.transaction.Transactional;
 import javax.inject.Inject;
 import java.sql.SQLException;
 
+import static junit.framework.TestCase.fail;
+
 @RunWith(SeedITRunner.class)
 public class FlywayIT extends AbstractSeedIT {
     @Inject
@@ -32,18 +34,19 @@ public class FlywayIT extends AbstractSeedIT {
         Assertions.assertThat(firstLineValue).isEqualTo("bar");
     }
 
-    @Test
+    @Test(expected = SQLException.class)
     @Transactional
     @Jdbc("datasource2")
     public void verifyAutomaticBaseline() throws SQLException {
-        try {
-            repository.getBar("tableTest");
-        } catch (SQLException e) {
-            Assertions.assertThat(e.getMessage().startsWith("java.sql.SQLSyntaxErrorException: user lacks privilege or object not found: TABLETEST"));
-        }
+        Assertions.assertThat(repository.getBar("tableTest")).isEqualTo("bar");
 
-        String firstLineValue = repository.getBar("tableTest2");
-        Assertions.assertThat(firstLineValue).isEqualTo("bar");
+        try {
+            repository.getBar("tableTest2");
+        } catch (SQLException e) {
+            Assertions.assertThat(e.getMessage().startsWith("java.sql.SQLSyntaxErrorException: user lacks privilege or object not found: TABLETEST2"));
+            throw e;
+        }
+        fail("should have failed with missing table");
     }
 
     @Test

@@ -33,7 +33,7 @@ public class FlywayConfigOptions {
     private Class<? extends FlywayCallback>[] callbacks;
     private Map<String, String> placeholders;
     private Boolean placeholderReplacement;
-    private Boolean skipDefaultCallResolvers;
+    private Boolean skipDefaultResolvers;
     private Boolean skipDefaultCallbacks;
     private Boolean outOfOrder;
     private Boolean validateOnMigrate;
@@ -190,11 +190,11 @@ public class FlywayConfigOptions {
     }
 
     public Boolean getSkipDefaultResolvers() {
-        return skipDefaultCallResolvers;
+        return skipDefaultResolvers;
     }
 
-    public void setSkipDefaultCallResolvers(Boolean skipDefaultCallResolvers) {
-        this.skipDefaultCallResolvers = skipDefaultCallResolvers;
+    public void setSkipDefaultResolvers(Boolean skipDefaultResolvers) {
+        this.skipDefaultResolvers = skipDefaultResolvers;
     }
 
     public Boolean getSkipDefaultCallbacks() {

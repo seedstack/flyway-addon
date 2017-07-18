@@ -69,7 +69,7 @@ public class FlywayUpgradePlugin extends AbstractSeedPlugin implements FlywayPro
                 LOGGER.info("Flyway migration is disabled for datasource {}", dataSourceName);
                 return;
             }
-            if (!Strings.isNullOrEmpty(dataSourceConf.getBaselineVersion())) {
+            if (!Strings.isNullOrEmpty(dataSourceConf.getOptions().getBaselineVersion())) {
                 LOGGER.info("Baselining datasource {} to {}", dataSourceName, flyway.getBaselineVersion());
                 flyway.baseline();
             }

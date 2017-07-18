@@ -10,13 +10,16 @@ package org.seedstack.flyway;
 import org.seedstack.coffig.Config;
 import org.seedstack.coffig.SingleValue;
 
+import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 @Config("flyway")
-public class FlywayConfig extends FlywayConfigOptions {
+public class FlywayConfig {
     private Map<String, DataSourceConfig> datasources = new HashMap<>();
+    @NotNull
+    private FlywayConfigOptions options = new FlywayConfigOptions();
 
     public Map<String, DataSourceConfig> getDataSources() {
         return Collections.unmodifiableMap(datasources);
@@ -30,9 +33,20 @@ public class FlywayConfig extends FlywayConfigOptions {
         return datasources.get(datasourceName);
     }
 
-    public static class DataSourceConfig extends FlywayConfigOptions {
+    public FlywayConfigOptions getOptions() {
+        return options;
+    }
+
+    public FlywayConfig setOptions(FlywayConfigOptions options) {
+        this.options = options;
+        return this;
+    }
+
+    public static class DataSourceConfig {
         @SingleValue
         private boolean enabled = true;
+        @NotNull
+        private FlywayConfigOptions options = new FlywayConfigOptions();
 
         public boolean isEnabled() {
             return enabled;
@@ -40,6 +54,15 @@ public class FlywayConfig extends FlywayConfigOptions {
 
         public DataSourceConfig setEnabled(boolean enabled) {
             this.enabled = enabled;
+            return this;
+        }
+
+        public FlywayConfigOptions getOptions() {
+            return options;
+        }
+
+        public DataSourceConfig setOptions(FlywayConfigOptions options) {
+            this.options = options;
             return this;
         }
     }

@@ -11,11 +11,11 @@ import com.google.common.collect.Lists;
 import io.nuun.kernel.api.plugin.InitState;
 import io.nuun.kernel.api.plugin.context.InitContext;
 import org.flywaydb.core.Flyway;
-import org.seedstack.coffig.util.Utils;
 import org.seedstack.flyway.FlywayConfig;
 import org.seedstack.flyway.FlywayConfigOptions;
 import org.seedstack.jdbc.spi.JdbcProvider;
 import org.seedstack.seed.core.internal.AbstractSeedPlugin;
+import org.seedstack.shed.reflect.Classes;
 
 import javax.sql.DataSource;
 import java.util.Arrays;
@@ -66,12 +66,12 @@ public class FlywayPlugin extends AbstractSeedPlugin {
         flyway.setLocations(FLYWAY_DEFAULT_PATH + dataSourceName);
 
         // Apply global options
-        applyOptions(flyway, flywayConfig);
+        applyOptions(flyway, flywayConfig.getOptions());
 
         FlywayConfig.DataSourceConfig dataSourceConfig = flywayConfig.getDataSource(dataSourceName);
         if (dataSourceConfig != null) {
             // Apply datasource-specific options
-            applyOptions(flyway, dataSourceConfig);
+            applyOptions(flyway, dataSourceConfig.getOptions());
         }
 
         return flyway;
@@ -111,7 +111,7 @@ public class FlywayPlugin extends AbstractSeedPlugin {
 
     @SuppressWarnings("unchecked")
     private <U> U[] instantiateDefault(Class<? extends U>[] classes) {
-        return Arrays.stream(classes).map(Utils::instantiateDefault).toArray(size -> (U[]) new Object[size]);
+        return Arrays.stream(classes).map(Classes::instantiateDefault).toArray(size -> (U[]) new Object[size]);
     }
 
     Map<String, Flyway> getAllFlyway() {
