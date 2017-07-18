@@ -12,182 +12,282 @@ menu:
         weight: 20
 ---
 
-SeedStack Flyway add-on provides support for database migration through the Flyway API.
-
-# Dependency
-
-{{< dependency g="org.seedstack.addons.flyway" a="flyway" >}}
-
-{{% callout info %}}
-The JDBC add-on is also required: [http://seedstack.org/addons/jdbc/](http://seedstack.org/addons/jdbc/)
-{{% /callout %}}
+SeedStack Flyway add-on provides support for automatic database migration through [Flyway](https://flywaydb.org/).
 
 {{% callout info %}}
 For more information about Flyway: [https://flywaydb.org/documentation/](https://flywaydb.org/documentation/)
 {{% /callout %}}
 
+# Dependency
+
+{{< dependency g="org.seedstack.addons.flyway" a="flyway" >}}
+
 # Configuration
 
-To migrate a database, you need to declare a flyway and jdbc configuration, and in its basic form is:
+To enable database migration, a [properly configured datasource]({{< ref "addons/jdbc/index.md#configuration" >}}) is required:
 
 ```yaml
 jdbc:
-    datasources:
-        datasource1:
-            # See JDBC add-on documentation: http://seedstack.org/addons/jdbc/
+  datasources:
+    someDatasource:
+      url: jdbc:hsqldb:mem:somedb
 ```
 
-With all the options, the configuration file looks like this:
+With only this configuration, the Flyway add-on will lookup for SQL migration scripts in the `db/migration/<dsName>` classpath
+location and if it finds any, will apply the necessary scripts to upgrade the database to the latest version.
+
+This behavior can be customized with the following options:
 
 ```yaml
-jdbc:
-    datasources:
-        datasource1:
-            # See JDBC add-on documentation: http://seedstack.org/addons/jdbc/
-        datasource2:
-            ...
 flyway:
-    schemas:
-    table:
-    sqlMigrationPrefix:
-    repeatableSqlMigrationPrefix:
-    sqlMigrationSeparator:
-    sqlMigrationSuffix:
-    encoding:
-    placeholderReplacement:
-    placeholders.name:
-    placeholderPrefix:
-    placeholderSuffix:
-    resolvers:
-    skipDefaultCallResolvers:
-    callbacks:
-    skipDefaultCallbacks:
-    target:
-    outOfOrder:
-    validateOnMigrate:
-    cleanOnValidationError:
-    mixed:
-    group:
-    ignoreMissingMigrations:
-    ignoreFutureMigrations:
-    cleanDisabled:
-    baselineOnMigrate:
-    installedBy:
+  # Configured Flyway data-sources with the datasource name as key
+  datasources:          
+    someDatasource:
+      # Enable / disable automatic database migration, and the default value is true
+      enabled: boolean
+      
+      # Datasource-specific options that override the global options (see below)
+      options: ...
+      
+  # Global options that can be overridden for each datasource (see above)
+  options:
+    # The locations to scan recursively for migrations
+    locations: (String[])
+    
+    # Schemas managed by Flyway. The first schema will be the one containing the metadata table                      
+    schemas: (String[])
+    
+    # The version to tag an existing schema with when executing baseline                        
+    baselineVersion: (String)
+    
+    # The description to tag an existing schema with when executing baseline               
+    baselineDescription: (String)
+    
+    # The name of the Flyway metadata table            
+    table: (String)
+    
+    # The file name prefix for sql migrations                         
+    sqlMigrationPrefix: (String)
+    
+    # The file name suffix for sql migrations         
+    sqlMigrationSuffix: (String)
 
-    # Configured Flyway with the datasource name as key
-    datasources:          
-          datasource1:
-             # Enable / disable automatic database migration, and the default value is true
-             enabled: boolean
-
-             # `locations` is a comma-separated list of locations scanned recursively for migrations.
-             # Unprefixed locations or locations starting with `classpath:` point to a package on the classpath and may contain both sql and java-based migrations.
-             # Classpath locations are under `src/main/resources/` and the default value is `META-INF/sql/<datasourceName>`.
-             # Locations starting with `filesystem:` point to a directory on the filesystem.
-             locations: classpath:com.mycomp.migration,database/migrations,filesystem:/sql-migrations
-
-             # The version to tag an existing schema
-             baselineVersion: 1   
-
-             # The description to tag an existing schema
-             baselineDescription: String
-
-          # This is the short way to write enabled: boolean
-          datasource2: boolean
+    # The file name prefix for repeatable sql migrations            
+    repeatableSqlMigrationPrefix: (String)
+    
+    # The file name separator for sql migrations  
+    sqlMigrationSeparator: (String)
+    
+    # The encoding of Sql migrations            
+    encoding: (String)
+    
+    # The prefix of every placeholder                      
+    placeholderPrefix: (String)
+    
+    # The suffix of every placeholder             
+    placeholderSuffix: (String)
+    
+    # The target version up to which Flyway should consider migrations             
+    target: (String)
+    
+    # The username that will be recorded in the metadata table as having applied the migration                        
+    installedBy: (String)
+    
+    # Custom MigrationResolvers to be used in addition to the built-in ones for resolving Migrations to apply.                   
+    resolvers: (Class<? extends MigrationResolver>[])
+    
+    # The callbacks for lifecycle notifications                     
+    callbacks: (Class<? extends FlywayCallback>[])
+    
+    # The placeholders to replace in sql migration scripts                     
+    placeholders: (Map<String, String>)
+    
+    # Whether placeholders should be replaced                  
+    placeholderReplacement: (Boolean)
+    
+    # Whether Flyway should skip the default resolvers         
+    skipDefaultResolvers: (Boolean)
+    
+    # Whether Flyway should skip the default callbacks      
+    skipDefaultCallbacks: (Boolean)
+    
+    # Allows migrations to be run "out of order"          
+    outOfOrder: (Boolean)
+    
+    # Whether to automatically call validate or not when running migrate                    
+    validateOnMigrate: (Boolean)
+    
+    # Whether to automatically call clean or not when a validation error occurs             
+    cleanOnValidationError: (Boolean)
+    
+    # Whether to allow mixing transactional and non-transactional statements within the same migration         
+    mixed: (Boolean)
+    
+    # Whether to group all pending migrations together in the same transaction when applying them (only recommended for databases with support for DDL transactions)                          
+    group: (Boolean)
+    
+    # Ignore missing migrations when reading the metadata table                         
+    ignoreMissingMigrations: (Boolean)
+    
+    # Whether to ignore future migrations when reading the metadata table        
+    ignoreFutureMigrations: (Boolean)
+    
+    # Whether to disable clean    
+    cleanDisabled: (Boolean)
+    
+    # Whether to automatically call baseline when migrate is executed against a non-empty schema with no metadata table    
+    baselineOnMigrate: (Boolean)
 ```
 
-The declaration of a datasource in jdbc is enough to create a Flyway instance.
-For the description of other global parameters, see the list below:
-
-
-| Parameters                   | Default                        |    Description                                                            |
-| ---------------------------- | ------------------------------ | ------------------------------------------------------------------------- |
-| schemas                      | Default schema of the connection | Comma-separated case-sensitive list of schemas managed by Flyway. The first schema will be the one containing the metadata table. |
-| table                        | schema_version                 | The name of Flyway's metadata table. By default (single-schema mode) the metadata table is placed in the default schema for the connection provided by the datasource. When the flyway.schemas property is set (multi-schema mode), the metadata table is placed in the first schema of the list. |
-| sqlMigrationPrefix           | V                              | The file name prefix for Sql migrations                                   |
-| repeatableSqlMigrationPrefix | R                              | The file name prefix for repeatable Sql migrations                        |
-| sqlMigrationSeparator        | __                             | The file name separator for Sql migrations                                |
-| sqlMigrationSuffix           | .sql                           | The file name suffix for Sql migrations                                   |
-| encoding                     | UTF-8                          | The encoding of Sql migrations                                            |
-| placeholderReplacement       | true                           | Whether placeholders should be replaced                                   |
-| placeholders.name            |                                | Placeholders to replace in Sql migrations. You can add many placeholders.name and replace `name` by the property name. |
-| placeholderPrefix            | ${                             | The prefix of every placeholder |
-| placeholderSuffix            | }                              | The suffix of every placeholder |
-| resolvers                    |                                | Comma-separated list of fully qualified class names of custom MigrationResolver implementations to be used in addition to the built-in ones for resolving Migrations to apply. |
-| skipDefaultCallResolvers     | false                          | Whether default built-in resolvers (sql, jdbc and spring-jdbc) should be skipped. If true, only custom resolvers are used. |
-| callbacks                    |                                | Comma-separated list of fully qualified class names of FlywayCallback implementations to use to hook into the Flyway lifecycle. |
-| skipDefaultCallbacks         | false                          | Whether default built-in callbacks (sql) should be skipped. If true, only custom callbacks are used. |
-| target                       | Latest version                 | The target version up to which Flyway should consider migrations. Migrations with a higher version number will be ignored. The special value current designates the current version of the schema. Example: 5.1 |
-| outOfOrder                   | false                          | Allows migrations to be run "out of order". If you already have versions 1 and 3 applied, and now a version 2 is found, it will be applied too instead of being ignored. |
-| validateOnMigrate            | true                           | For each sql migration a checksum is calculated when the sql script is executed. The validate mechanism checks if the sql migration in the classpath still has the same checksum as the sql migration already executed in the database. |
-| cleanOnValidationError       | false                          | Whether to automatically call clean or not when a validation error occurs. Warning ! Do not enable in production ! |
-| mixed                        | false                          | Whether to allow mixing transactional and non-transactional statements within the same migration |
-| group                        | false                          | Whether to group all pending migrations together in the same transaction when applying them (only recommended for databases with support for DDL transactions) |
-| ignoreMissingMigrations      | false                          | Ignore missing migrations when reading the metadata table. These are migrations that were performed by an older deployment of the application that are no longer available in this version. |
-| ignoreFutureMigrations       | true                           | Ignore future migrations when reading the metadata table. These are migrations that were performed by a newer deployment of the application that are not yet available in this version.  |
-| cleanDisabled                | false                          | Whether to disable clean. This is especially useful for production environments where running clean can be quite a career limiting move. |
-| baselineOnMigrate            | false                          | Whether to automatically call baseline when migrate is executed against a non-empty schema with no metadata table. This schema will then be baselined with the `baselineVersion` before executing the migrations. Only migrations above baselineVersion will then be applied. This is useful for initial Flyway production deployments on projects with an existing DB. |
-| installedBy                  | Current database user          | The username that will be recorded in the metadata table as having applied the migration |
-
-# Migration Scripts
-
-The default location of migration scripts is `src/main/resources/META-INF/sql/<datasourceName>`.
-
-The default naming convention is as follows: `V<VERSION>__<DESCRIPTION>.<FORMAT>`
-
-Where `<VERSION>` is a numeric value that can contain a point (“.”) or an underscore (“_”) for example 3, 3.1, 3_1 are all valid for the version.
-The double underscore, __ is what is used to separate the version number from the description.
-For the `<FORMAT>`,  you can have either sql or java depending on the method being used to supply the migrations.
-
 {{% callout info %}}
-When you use flyway for the first time, it will create a schema_version table, which sets the database version number.
+More information about options and their default values can be found [here](https://flywaydb.org/documentation/api/javadoc.html).
 {{% /callout %}}
 
-# Automatic migration
+# Usage
 
-By default, the Flyway module automatically updates your databases.
-If you add new migration scripts, they will automatically be played when the application starts. It is possible to include a baseline to exclude all previous migration.
-To disable automation, you must pass `enabled` to false.
+## Migration Scripts
 
-# Tool
+The default location of migration scripts is in the classpath location `db/migration/<datasourceName>`. The default naming 
+convention of a migration file is: 
 
-You can run Flyway in tool mode.
+```plain
+V<VERSION>__<DESCRIPTION>.<FORMAT>
+```
+
+Where:
+
+* `<VERSION>` is a numeric value that can contain a point (“.”) or an underscore (“_”) for example 3, 3.1, 3_1 are all 
+valid for the version.
+* The **double underscore** (__) is what is used to separate the version number from the description.
+* The `<FORMAT>` is either `sql` or `java` depending on the method being used to supply the migrations.
 
 {{% callout info %}}
-You can find more information about this mode: [http://seedstack.org/docs/seed/manual/running/#tool-mode](http://seedstack.org/docs/seed/manual/running/#tool-mode)
+When you use Flyway for the first time, it will by default create a table named `schema_version`, which records the migration
+metadata.
 {{% /callout %}}
 
-The tool is built like this `java -Dseedstack.tool=flyway-<functionName> -f datasourceName -optionName value org.seedstack.seed.core.SeedMain`. The tool definition must be the first argument.
-The available functions are:
+## Automatic migration
 
-| Name     |     Description                                                                              |
-| -------- | -------------------------------------------------------------------------------------------- |
-| migrate  | Migrates the database                                                                        |
-| clean    | Drops all objects in the configured schemas                                                  |
-| info     | Prints the details and status information about all the migrations                           |
-| validate | Validates the applied migrations against the ones available on the classpath                 |
-| baseline | Baselines an existing database, excluding all migrations up to and including baselineVersion |
-| repair   | Repairs the metadata table                                                                   |
+By default, the Flyway add-on automatically migrates your databases to their respective latest versions during the application
+startup. It is possible to specify a baseline which will exclude all previous migrations (to work on a previously existing 
+database). Automatic migration on startup can be disabled per datasource by setting the corresponding `enabled` configuration
+attribute to `false`.
 
-Then, you need to add the datasource. With Flyway tool, you can override some properties of the basic configuration:
+# Tooling
 
-| Parameters                   | name   | longName            | Required | Availability                                     |
-| ---------------------------- | ------ | ------------------- | -------- | ------------------------------------------------ |
-| datasource                   | f      | flyway              | True     | Migrate, clean, Baseline, info, repair, validate |
-| schemas                      | s      | schemas             | False    | Migrate, clean, Baseline, info, repair, validate |
-| table                        | t      | table               | False    | Migrate, Baseline, info, repair, validate        |
-| locations                    | l      | locations           | False    | Migrate, info, repair, validate                  |
-| baselineVersion              | bv     | baselineversion     | False    | Baseline                                         |
-| baselineDescription          | bd     | baselinedescription | False    | Baseline                                         |
-| target                       | target |                     | False    | Migrate, info, validate                          |
-| outOfOrder                   | o      | outorder            | False    | Migrate, info, validate                          |
-| validateOnMigrate            | v      | validateonmigrate   | False    | Migrate                                          |
-| mixed                        | m      | mixed               | False    | Migrate                                          |
-| group                        | g      | group               | False    | Migrate                                          |
-| ignoreMissingMigrations      | im     | ignoremissingmig    | False    | Migrate, validate                                |
-| ignoreFutureMigrations       | if     | ignorefuturemig     | False    | Migrate, validate                                |
-| baselineOnMigrate            | bm     | baselineonmigrate   | False    | Migrate                                          |
-| installedBy                  | by     | installedby         | False    | Migrate                                          |
+The Flyway add-on provides several SeedStack tools to execute database operations manually.
+
+{{% callout info %}}
+For more information about the tool mode, see [this page]({{< ref "docs/seed/manual/running.md#tool-mode" >}}).
+{{% /callout %}}
+
+## Migrate tool
+ 
+Executes a migration operation using the existing configuration. 
+With the Maven plugin [tool goal]({{< ref "docs/overview/maven-plugin/tool.md" >}}):
+
+```bash
+mvn -Dargs="flyway-migrate -d <dataSourceName>" seedstack:tool
+```
+
+Or directly by [running the application capsule]({{< ref "docs/seed/manual/running.md#capsule" >}}):
+ 
+```bash
+java -Dseedstack.tool=flyway-migrate -jar app-capsule.jar -d <dataSourceName>
+``` 
+
+Optional parameters:
+
+* `-t <targetVersion>`: the target version to migrate to (overrides the configured target if any). 
+ 
+## Clean tool 
+
+Drops all database objects.
+
+With the Maven plugin [tool goal]({{< ref "docs/overview/maven-plugin/tool.md" >}}):
+
+```bash
+mvn -Dargs="flyway-clean -d <dataSourceName>" seedstack:tool
+```
+
+Or directly by [running the application capsule]({{< ref "docs/seed/manual/running.md#capsule" >}}):
+ 
+```bash
+java -Dseedstack.tool=flyway-clean -jar app-capsule.jar -d <dataSourceName>
+``` 
+
+## Info tool 
+
+Prints details and status information about the migrations.
+
+With the Maven plugin [tool goal]({{< ref "docs/overview/maven-plugin/tool.md" >}}):
+
+```bash
+mvn -Dargs="flyway-info -d <dataSourceName>" seedstack:tool
+```
+
+Or directly by [running the application capsule]({{< ref "docs/seed/manual/running.md#capsule" >}}):
+ 
+```bash
+java -Dseedstack.tool=flyway-info -jar app-capsule.jar -d <dataSourceName>
+``` 
+
+## Validate tool 
+
+Validates the currently applied migrations against the ones available on the classpath.
+
+With the Maven plugin [tool goal]({{< ref "docs/overview/maven-plugin/tool.md" >}}):
+
+```bash
+mvn -Dargs="flyway-validate -d <dataSourceName>" seedstack:tool
+```
+
+Or directly by [running the application capsule]({{< ref "docs/seed/manual/running.md#capsule" >}}):
+ 
+```bash
+java -Dseedstack.tool=flyway-validate -jar app-capsule.jar -d <dataSourceName>
+``` 
+
+Optional parameters:
+
+* `-t <targetVersion>`: the target version to validate (overrides the configured target if any). 
+
+## Baseline tool 
+
+Baselines an existing database, excluding all migrations up to and including the configured baseline version.
+
+With the Maven plugin [tool goal]({{< ref "docs/overview/maven-plugin/tool.md" >}}):
+
+```bash
+mvn -Dargs="flyway-baseline -d <dataSourceName>" seedstack:tool
+```
+
+Or directly by [running the application capsule]({{< ref "docs/seed/manual/running.md#capsule" >}}):
+ 
+```bash
+java -Dseedstack.tool=flyway-baseline -jar app-capsule.jar -d <dataSourceName>
+``` 
+
+Optional parameters:
+
+* `-bv <baselineVersion>`: the baseline version to use (overrides the configured baseline version if any). 
+* `-bd <baselineDescription>`: the baseline description (overrides the configured baseline description if any).
+
+## Repair tool 
+
+Repairs the metadata table.
+
+With the Maven plugin [tool goal]({{< ref "docs/overview/maven-plugin/tool.md" >}}):
+
+```bash
+mvn -Dargs="flyway-repair -d <dataSourceName>" seedstack:tool
+```
+
+Or directly by [running the application capsule]({{< ref "docs/seed/manual/running.md#capsule" >}}):
+ 
+```bash
+java -Dseedstack.tool=flyway-repair -jar app-capsule.jar -d <dataSourceName>
+``` 
 
 # Example
 
@@ -195,31 +295,45 @@ Configuration for a mysql database running on the same machine:
 
 ```yaml
 jdbc:
-    datasources:
-        datasource1:
-            url: jdbc:mysql://localhost:3306/mydb
-            user: root
-        datasource2:
-            url: jdbc:mysql://localhost:3306/mydb2
-            user: root
+  datasources:
+    datasource1:
+      url: jdbc:hsqldb:mem:somedb1
+    datasource2:
+      url: jdbc:hsqldb:mem:somedb2
+      
 flyway:
-    datasources:
-        datasource2:
-            baselineVersion: 1.1
+  datasources:
+    datasource2:
+      options:
+        baselineVersion: 1.1
 ```
 
-List of migration files:
-```file
-src/main/resources/META-INF/sql/
-    datasource1/
-       V1.1__createStructure.sql
-       V1.2__addEmailColumn.sql
-    datasource2/
-       V1.1__createStructure.sql
-       V2__structureV2.sql
+Migration files:
+
+```plain
+src/main/resources/db/migration
+  datasource1
+    V1.1__createStructure.sql
+    V1.2__addEmailColumn.sql
+  datasource2
+    V1.1__createStructure.sql
+    V2__structureV2.sql
 ```
 
-And that's all to have an automatic migration. In this example, the database "mydb" executed migration 1.1 and 1.2. The database "mydb2" executed only migration 2.
+In this example: 
 
+* The database `somedb1` will be automatically updated to version 1.2 by applying all the required migrations. 
+* The database `somedb2` will be automatically updated to version 1.2 by only applying the V2 migration if needed (migration
+V1.1 will be left out as specified by the baseline configuration).
 
-With this basic configuration, you can use tool function like this: `java -Dseedstack.tool=flyway-migrate -f datasource1 org.seedstack.seed.core.SeedMain`
+You can also use the following tool to manually migrate `datasource1`:
+
+```bash
+mvn -Dargs="flyway-migrate -d datasource1" seedstack:tool
+```
+
+Or without using Maven, directly by running the application capsule:
+
+```bash
+java -Dseedstack.tool=flyway-migrate -jar app-capsule.jar -d datasource1
+```
