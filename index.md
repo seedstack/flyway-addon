@@ -178,19 +178,19 @@ attribute to `false`.
 The Flyway add-on provides several SeedStack tools to execute database operations manually.
 
 {{% callout info %}}
-For more information about the tool mode, see [this page]({{< ref "docs/seed/manual/running.md#tool-mode" >}}).
+For more information about the tool mode, see [this page]({{< ref "docs/core/launchers.md#tool-mode" >}}).
 {{% /callout %}}
 
 ## Migrate tool
  
 Executes a migration operation using the existing configuration. 
-With the Maven plugin [tool goal]({{< ref "docs/maven-plugin/manual/tool.md" >}}):
+With the Maven plugin [tool goal]({{< ref "docs/maven-plugin/tool.md" >}}):
 
 ```bash
 mvn -Dargs="flyway-migrate -d <dataSourceName>" seedstack:tool
 ```
 
-Or directly by [running the application capsule]({{< ref "docs/seed/manual/running.md#capsule" >}}):
+Or directly by [running the application capsule]({{< ref "docs/core/launchers.md#capsule" >}}):
  
 ```bash
 java -Dseedstack.tool=flyway-migrate -jar app-capsule.jar -d <dataSourceName>
@@ -204,13 +204,13 @@ Optional parameters:
 
 Drops all database objects.
 
-With the Maven plugin [tool goal]({{< ref "docs/maven-plugin/manual/tool.md" >}}):
+With the Maven plugin [tool goal]({{< ref "docs/maven-plugin/tool.md" >}}):
 
 ```bash
 mvn -Dargs="flyway-clean -d <dataSourceName>" seedstack:tool
 ```
 
-Or directly by [running the application capsule]({{< ref "docs/seed/manual/running.md#capsule" >}}):
+Or directly by [running the application capsule]({{< ref "docs/core/launchers.md#capsule" >}}):
  
 ```bash
 java -Dseedstack.tool=flyway-clean -jar app-capsule.jar -d <dataSourceName>
@@ -220,13 +220,13 @@ java -Dseedstack.tool=flyway-clean -jar app-capsule.jar -d <dataSourceName>
 
 Prints details and status information about the migrations.
 
-With the Maven plugin [tool goal]({{< ref "docs/maven-plugin/manual/tool.md" >}}):
+With the Maven plugin [tool goal]({{< ref "docs/maven-plugin/tool.md" >}}):
 
 ```bash
 mvn -Dargs="flyway-info -d <dataSourceName>" seedstack:tool
 ```
 
-Or directly by [running the application capsule]({{< ref "docs/seed/manual/running.md#capsule" >}}):
+Or directly by [running the application capsule]({{< ref "docs/core/launchers.md#capsule" >}}):
  
 ```bash
 java -Dseedstack.tool=flyway-info -jar app-capsule.jar -d <dataSourceName>
@@ -236,13 +236,13 @@ java -Dseedstack.tool=flyway-info -jar app-capsule.jar -d <dataSourceName>
 
 Validates the currently applied migrations against the ones available on the classpath.
 
-With the Maven plugin [tool goal]({{< ref "docs/maven-plugin/manual/tool.md" >}}):
+With the Maven plugin [tool goal]({{< ref "docs/maven-plugin/tool.md" >}}):
 
 ```bash
 mvn -Dargs="flyway-validate -d <dataSourceName>" seedstack:tool
 ```
 
-Or directly by [running the application capsule]({{< ref "docs/seed/manual/running.md#capsule" >}}):
+Or directly by [running the application capsule]({{< ref "docs/core/launchers.md#capsule" >}}):
  
 ```bash
 java -Dseedstack.tool=flyway-validate -jar app-capsule.jar -d <dataSourceName>
@@ -256,13 +256,13 @@ Optional parameters:
 
 Baselines an existing database, excluding all migrations up to and including the configured baseline version.
 
-With the Maven plugin [tool goal]({{< ref "docs/maven-plugin/manual/tool.md" >}}):
+With the Maven plugin [tool goal]({{< ref "docs/maven-plugin/tool.md" >}}):
 
 ```bash
 mvn -Dargs="flyway-baseline -d <dataSourceName>" seedstack:tool
 ```
 
-Or directly by [running the application capsule]({{< ref "docs/seed/manual/running.md#capsule" >}}):
+Or directly by [running the application capsule]({{< ref "docs/core/launchers.md#capsule" >}}):
  
 ```bash
 java -Dseedstack.tool=flyway-baseline -jar app-capsule.jar -d <dataSourceName>
@@ -277,13 +277,13 @@ Optional parameters:
 
 Repairs the metadata table.
 
-With the Maven plugin [tool goal]({{< ref "docs/maven-plugin/manual/tool.md" >}}):
+With the Maven plugin [tool goal]({{< ref "docs/maven-plugin/tool.md" >}}):
 
 ```bash
 mvn -Dargs="flyway-repair -d <dataSourceName>" seedstack:tool
 ```
 
-Or directly by [running the application capsule]({{< ref "docs/seed/manual/running.md#capsule" >}}):
+Or directly by [running the application capsule]({{< ref "docs/core/launchers.md#capsule" >}}):
  
 ```bash
 java -Dseedstack.tool=flyway-repair -jar app-capsule.jar -d <dataSourceName>
