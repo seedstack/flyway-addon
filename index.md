@@ -1,5 +1,6 @@
 ---
 title: "Flyway"
+addon: "Flyway"
 repo: "https://github.com/seedstack/flyway-addon"
 author: Adrien LAUER
 description: "Provides automatic database migration tools through Flyway."
@@ -7,9 +8,6 @@ tags:
     - persistence
 zones:
     - Addons
-menu:
-    AddonFlyway:
-        weight: 20
 ---
 
 SeedStack Flyway add-on provides support for automatic database migration through [Flyway](https://flywaydb.org/).
@@ -18,11 +16,11 @@ SeedStack Flyway add-on provides support for automatic database migration throug
 For more information about Flyway: [https://flywaydb.org/documentation/](https://flywaydb.org/documentation/)
 {{% /callout %}}
 
-# Dependency
+## Dependency
 
 {{< dependency g="org.seedstack.addons.flyway" a="flyway" >}}
 
-# Configuration
+## Configuration
 
 To enable database migration, a [properly configured datasource]({{< ref "addons/jdbc/index.md#configuration" >}}) is required:
 
@@ -143,9 +141,9 @@ flyway:
 More information about options and their default values can be found [here](https://flywaydb.org/documentation/api/javadoc.html).
 {{% /callout %}}
 
-# Usage
+## Usage
 
-## Migration Scripts
+### Migration Scripts
 
 The default location of migration scripts is in the classpath location `db/migration/<datasourceName>`. The default naming 
 convention of a migration file is: 
@@ -166,14 +164,14 @@ When you use Flyway for the first time, it will by default create a table named 
 metadata.
 {{% /callout %}}
 
-## Automatic migration
+### Automatic migration
 
 By default, the Flyway add-on automatically migrates your databases to their respective latest versions during the application
 startup. It is possible to specify a baseline which will exclude all previous migrations (to work on a previously existing 
 database). Automatic migration on startup can be disabled per datasource by setting the corresponding `enabled` configuration
 attribute to `false`.
 
-# Tooling
+## Tooling
 
 The Flyway add-on provides several SeedStack tools to execute database operations manually.
 
@@ -181,7 +179,7 @@ The Flyway add-on provides several SeedStack tools to execute database operation
 For more information about the tool mode, see [this page]({{< ref "docs/core/launchers.md#tool-mode" >}}).
 {{% /callout %}}
 
-## Migrate tool
+### Migrate tool
  
 Executes a migration operation using the existing configuration. 
 With the Maven plugin [tool goal]({{< ref "docs/maven-plugin/tool.md" >}}):
@@ -200,7 +198,7 @@ Optional parameters:
 
 * `-t <targetVersion>`: the target version to migrate to (overrides the configured target if any). 
  
-## Clean tool 
+### Clean tool 
 
 Drops all database objects.
 
@@ -216,7 +214,7 @@ Or directly by [running the application capsule]({{< ref "docs/core/launchers.md
 java -Dseedstack.tool=flyway-clean -jar app-capsule.jar -d <dataSourceName>
 ``` 
 
-## Info tool 
+### Info tool 
 
 Prints details and status information about the migrations.
 
@@ -232,7 +230,7 @@ Or directly by [running the application capsule]({{< ref "docs/core/launchers.md
 java -Dseedstack.tool=flyway-info -jar app-capsule.jar -d <dataSourceName>
 ``` 
 
-## Validate tool 
+### Validate tool 
 
 Validates the currently applied migrations against the ones available on the classpath.
 
@@ -252,7 +250,7 @@ Optional parameters:
 
 * `-t <targetVersion>`: the target version to validate (overrides the configured target if any). 
 
-## Baseline tool 
+### Baseline tool 
 
 Baselines an existing database, excluding all migrations up to and including the configured baseline version.
 
@@ -273,7 +271,7 @@ Optional parameters:
 * `-bv <baselineVersion>`: the baseline version to use (overrides the configured baseline version if any). 
 * `-bd <baselineDescription>`: the baseline description (overrides the configured baseline description if any).
 
-## Repair tool 
+### Repair tool 
 
 Repairs the metadata table.
 
@@ -289,7 +287,7 @@ Or directly by [running the application capsule]({{< ref "docs/core/launchers.md
 java -Dseedstack.tool=flyway-repair -jar app-capsule.jar -d <dataSourceName>
 ``` 
 
-# Example
+## Example
 
 Configuration for a mysql database running on the same machine:
 
