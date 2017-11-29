@@ -176,7 +176,7 @@ attribute to `false`.
 The Flyway add-on provides several SeedStack tools to execute database operations manually.
 
 {{% callout info %}}
-For more information about the tool mode, see [this page]({{< ref "docs/core/launchers.md#tool-mode" >}}).
+For more information about the tool mode, see [this page]({{< ref "docs/core/index.md#tool-mode" >}}).
 {{% /callout %}}
 
 ### Migrate tool
@@ -188,7 +188,7 @@ With the Maven plugin [tool goal]({{< ref "docs/maven-plugin/tool.md" >}}):
 mvn -Dargs="flyway-migrate -d <dataSourceName>" seedstack:tool
 ```
 
-Or directly by [running the application capsule]({{< ref "docs/core/launchers.md#capsule" >}}):
+Or directly by [running the application capsule]({{< ref "docs/core/index.md#capsule" >}}):
  
 ```bash
 java -Dseedstack.tool=flyway-migrate -jar app-capsule.jar -d <dataSourceName>
@@ -208,7 +208,7 @@ With the Maven plugin [tool goal]({{< ref "docs/maven-plugin/tool.md" >}}):
 mvn -Dargs="flyway-clean -d <dataSourceName>" seedstack:tool
 ```
 
-Or directly by [running the application capsule]({{< ref "docs/core/launchers.md#capsule" >}}):
+Or directly by [running the application capsule]({{< ref "docs/core/index.md#capsule" >}}):
  
 ```bash
 java -Dseedstack.tool=flyway-clean -jar app-capsule.jar -d <dataSourceName>
@@ -224,7 +224,7 @@ With the Maven plugin [tool goal]({{< ref "docs/maven-plugin/tool.md" >}}):
 mvn -Dargs="flyway-info -d <dataSourceName>" seedstack:tool
 ```
 
-Or directly by [running the application capsule]({{< ref "docs/core/launchers.md#capsule" >}}):
+Or directly by [running the application capsule]({{< ref "docs/core/index.md#capsule" >}}):
  
 ```bash
 java -Dseedstack.tool=flyway-info -jar app-capsule.jar -d <dataSourceName>
@@ -240,7 +240,7 @@ With the Maven plugin [tool goal]({{< ref "docs/maven-plugin/tool.md" >}}):
 mvn -Dargs="flyway-validate -d <dataSourceName>" seedstack:tool
 ```
 
-Or directly by [running the application capsule]({{< ref "docs/core/launchers.md#capsule" >}}):
+Or directly by [running the application capsule]({{< ref "docs/core/index.md#capsule" >}}):
  
 ```bash
 java -Dseedstack.tool=flyway-validate -jar app-capsule.jar -d <dataSourceName>
@@ -260,7 +260,7 @@ With the Maven plugin [tool goal]({{< ref "docs/maven-plugin/tool.md" >}}):
 mvn -Dargs="flyway-baseline -d <dataSourceName>" seedstack:tool
 ```
 
-Or directly by [running the application capsule]({{< ref "docs/core/launchers.md#capsule" >}}):
+Or directly by [running the application capsule]({{< ref "docs/core/index.md#capsule" >}}):
  
 ```bash
 java -Dseedstack.tool=flyway-baseline -jar app-capsule.jar -d <dataSourceName>
@@ -281,7 +281,7 @@ With the Maven plugin [tool goal]({{< ref "docs/maven-plugin/tool.md" >}}):
 mvn -Dargs="flyway-repair -d <dataSourceName>" seedstack:tool
 ```
 
-Or directly by [running the application capsule]({{< ref "docs/core/launchers.md#capsule" >}}):
+Or directly by [running the application capsule]({{< ref "docs/core/index.md#capsule" >}}):
  
 ```bash
 java -Dseedstack.tool=flyway-repair -jar app-capsule.jar -d <dataSourceName>
