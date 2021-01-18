@@ -7,12 +7,12 @@
  */
 package org.seedstack.flyway;
 
-import org.flywaydb.core.api.callback.FlywayCallback;
-import org.flywaydb.core.api.resolver.MigrationResolver;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.flywaydb.core.api.callback.Callback;
+import org.flywaydb.core.api.resolver.MigrationResolver;
 
 public class FlywayConfigOptions {
     private String[] locations;
@@ -30,7 +30,7 @@ public class FlywayConfigOptions {
     private String target;
     private String installedBy;
     private Class<? extends MigrationResolver>[] resolvers;
-    private Class<? extends FlywayCallback>[] callbacks;
+    private Class<? extends Callback>[] callbacks;
     private Map<String, String> placeholders;
     private Boolean placeholderReplacement;
     private Boolean skipDefaultResolvers;
@@ -165,11 +165,11 @@ public class FlywayConfigOptions {
         this.resolvers = resolvers == null ? null : resolvers.clone();
     }
 
-    public Class<? extends FlywayCallback>[] getCallbacks() {
+    public Class<? extends Callback>[] getCallbacks() {
         return callbacks == null ? null : callbacks.clone();
     }
 
-    public void setCallbacks(Class<? extends FlywayCallback>[] callbacks) {
+    public void setCallbacks(Class<? extends Callback>[] callbacks) {
         this.callbacks = callbacks.clone();
     }
 

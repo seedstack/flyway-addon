@@ -24,10 +24,11 @@ public class Repository {
     public String getBar(String tableName) throws SQLException {
         String sql = "Select * from " + tableName;
         PreparedStatement statement = connection.prepareStatement(sql);
-        ResultSet resultSet = statement.executeQuery();
-        if (resultSet.next()) {
-            return resultSet.getString("Foo");
+        try (ResultSet resultSet = statement.executeQuery();) {
+            if (resultSet.next()) {
+                return resultSet.getString("Foo");
+            }
+            return null;
         }
-        return null;
     }
 }

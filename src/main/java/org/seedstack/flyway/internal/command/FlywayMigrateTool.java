@@ -8,7 +8,9 @@
 package org.seedstack.flyway.internal.command;
 
 import org.flywaydb.core.Flyway;
+import org.flywaydb.core.api.output.MigrateResult;
 import org.seedstack.flyway.internal.AbstractFlywayTool;
+import org.seedstack.flyway.internal.FlywayUtils;
 import org.seedstack.seed.cli.CliOption;
 
 public class FlywayMigrateTool extends AbstractFlywayTool {
@@ -26,16 +28,20 @@ public class FlywayMigrateTool extends AbstractFlywayTool {
         String datasource = getDatasource();
 
         if (target != null) {
-            flyway.setTargetAsString(target);
+            flyway = FlywayUtils.getFlywayBuilderFromInstance(getFlyway()).locations(target).load();
+
         }
 
-        System.out.println("Flyway: migrating datasource " + datasource + " to " + flyway.getTarget());
-        int result = flyway.migrate();
-        if (result == 0) {
+        System.out.println("Flyway: migrating datasource " + datasource + " to " + flyway.getConfiguration().getTarget());
+        MigrateResult result = flyway.migrate();
+
+        if (result.migrationsExecuted == 0) {
             System.out.println("Flyway: datasource " + datasource + " is already up to date");
         } else {
             System.out.println("Flyway: datasource " + datasource + " has been migrated (" + result + " migration(s) applied)");
         }
+
+        result.warnings.forEach(warn -> System.out.println("WARNING: " + warn));
 
         return 0;
     }
