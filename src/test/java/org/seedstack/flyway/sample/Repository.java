@@ -7,15 +7,16 @@
  */
 package org.seedstack.flyway.sample;
 
-import org.seedstack.seed.it.ITBind;
-
-import javax.inject.Inject;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@ITBind
+import javax.inject.Inject;
+
+import org.seedstack.seed.Bind;
+
+@Bind
 public class Repository {
     @Inject
     private Connection connection;

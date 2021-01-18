@@ -7,22 +7,22 @@
  */
 package org.seedstack.flyway;
 
+import static junit.framework.TestCase.fail;
+
+import java.sql.SQLException;
+
+import javax.inject.Inject;
+
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.seedstack.flyway.sample.Repository;
 import org.seedstack.jdbc.Jdbc;
-import org.seedstack.seed.it.AbstractSeedIT;
-import org.seedstack.seed.it.SeedITRunner;
+import org.seedstack.seed.testing.junit4.SeedITRunner;
 import org.seedstack.seed.transaction.Transactional;
 
-import javax.inject.Inject;
-import java.sql.SQLException;
-
-import static junit.framework.TestCase.fail;
-
 @RunWith(SeedITRunner.class)
-public class FlywayIT extends AbstractSeedIT {
+public class FlywayIT {
     @Inject
     private Repository repository;
 
