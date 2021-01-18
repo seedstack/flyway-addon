@@ -61,9 +61,9 @@ public class FlywayUpgradePlugin extends AbstractSeedPlugin implements FlywayPro
     }
 
     private void automaticMigration(Flyway flyway, String dataSourceName, DataSourceConfig dataSourceConf) {
-        if (!locationExists(flyway)) {
+        if (!locationExists(flyway) && !codeMigrationExists(flyway)) {
             // no migration if no script is present
-            LOGGER.info("Ignoring Flyway migration for datasource without scripts {}", dataSourceName);
+            LOGGER.info("Ignoring Flyway migration for datasource without scripts/code generation {}", dataSourceName);
             return;
         }
         if (dataSourceConf != null) {
@@ -79,6 +79,10 @@ public class FlywayUpgradePlugin extends AbstractSeedPlugin implements FlywayPro
         }
         LOGGER.info("Migrating datasource {} to {}", dataSourceName, flyway.getConfiguration().getTarget());
         flyway.migrate();
+    }
+
+    private boolean codeMigrationExists(Flyway flyway) {
+        return flyway.getConfiguration().getJavaMigrations() != null;
     }
 
     private boolean locationExists(Flyway flyway) {

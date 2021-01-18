@@ -7,8 +7,10 @@
  */
 package org.seedstack.flyway;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.flywaydb.core.api.ResourceProvider;
@@ -16,11 +18,13 @@ import org.flywaydb.core.api.callback.Callback;
 import org.flywaydb.core.api.migration.JavaMigration;
 import org.flywaydb.core.api.resolver.MigrationResolver;
 
+import com.google.common.collect.Lists;
+
 public class FlywayConfigOptions {
     private String baselineDescription;
     private Boolean baselineOnMigrate;
     private String baselineVersion;
-    private Class<? extends Callback>[] callbacks;
+    private List<Class<? extends Callback>> callbacks = new ArrayList<>();
     private Boolean cleanDisabled;
     private Boolean cleanOnValidationError;
     private Boolean createSchemas;
@@ -33,7 +37,7 @@ public class FlywayConfigOptions {
     private Boolean ignorePendingMigrations;
     private String initSql;
     private String installedBy;
-    private Class<? extends JavaMigration>[] javaMigrations;
+    private List<Class<? extends JavaMigration>> javaMigrations = new ArrayList<>();
     private String[] locations;
     private Integer lockRetryCount;
     private Boolean mixed;
@@ -43,7 +47,7 @@ public class FlywayConfigOptions {
     private Map<String, String> placeholders;
     private String placeholderSuffix;
     private String repeatableSqlMigrationPrefix;
-    private Class<? extends MigrationResolver>[] resolvers;
+    private List<Class<? extends MigrationResolver>> resolvers = new ArrayList<>();
     private Class<? extends ResourceProvider> resourceProvider;
     private String[] schemas;
     private Boolean skipDefaultCallbacks;
@@ -69,8 +73,12 @@ public class FlywayConfigOptions {
         return baselineVersion;
     }
 
+    @SuppressWarnings("unchecked")
     public Class<? extends Callback>[] getCallbacks() {
-        return callbacks == null ? null : callbacks.clone();
+        if (this.callbacks.isEmpty()) {
+            return null;
+        }
+        return this.callbacks.toArray(new Class[0]);
     }
 
     public Boolean getCleanDisabled() {
@@ -122,8 +130,12 @@ public class FlywayConfigOptions {
         return installedBy;
     }
 
-    public Class<? extends JavaMigration>[] getJavaMigrations() {
-        return javaMigrations == null ? null : javaMigrations.clone();
+    @SuppressWarnings("unchecked")
+    public Class<JavaMigration>[] getJavaMigrations() {
+        if (javaMigrations.isEmpty()) {
+            return null;
+        }
+        return this.javaMigrations.toArray(new Class[0]);
     }
 
     public String[] getLocations() {
@@ -162,8 +174,13 @@ public class FlywayConfigOptions {
         return repeatableSqlMigrationPrefix;
     }
 
+    @SuppressWarnings("unchecked")
     public Class<? extends MigrationResolver>[] getResolvers() {
-        return resolvers == null ? null : resolvers.clone();
+        if (this.resolvers.isEmpty()) {
+            return null;
+        }
+
+        return this.resolvers.toArray(new Class[0]);
     }
 
     public Class<? extends ResourceProvider> getResourceProvider() {
@@ -227,7 +244,11 @@ public class FlywayConfigOptions {
     }
 
     public void setCallbacks(Class<? extends Callback>[] callbacks) {
-        this.callbacks = callbacks.clone();
+        if (callbacks == null) {
+            this.callbacks = new ArrayList<>();
+        } else {
+            this.callbacks = new ArrayList<>(Lists.newArrayList(callbacks));
+        }
     }
 
     public void setCleanDisabled(Boolean cleanDisabled) {
@@ -279,7 +300,11 @@ public class FlywayConfigOptions {
     }
 
     public void setJavaMigrations(Class<? extends JavaMigration>[] javaMigrations) {
-        this.javaMigrations = javaMigrations;
+        if (javaMigrations == null) {
+            this.javaMigrations = new ArrayList<>();
+        } else {
+            this.javaMigrations = Lists.newArrayList(javaMigrations);
+        }
     }
 
     public void setLocations(String[] locations) {
@@ -319,7 +344,11 @@ public class FlywayConfigOptions {
     }
 
     public void setResolvers(Class<? extends MigrationResolver>[] resolvers) {
-        this.resolvers = resolvers == null ? null : resolvers.clone();
+        if (resolvers == null) {
+            this.resolvers = new ArrayList<>();
+        } else {
+            this.resolvers = Lists.newArrayList(resolvers);
+        }
     }
 
     public void setResourceProvider(Class<? extends ResourceProvider> resourceProvider) {

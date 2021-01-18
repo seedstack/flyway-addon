@@ -7,6 +7,7 @@
  */
 package org.seedstack.flyway.internal;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -17,7 +18,10 @@ import java.util.Optional;
 import javax.sql.DataSource;
 
 import org.flywaydb.core.Flyway;
+import org.flywaydb.core.api.callback.Callback;
 import org.flywaydb.core.api.configuration.FluentConfiguration;
+import org.flywaydb.core.api.migration.JavaMigration;
+import org.flywaydb.core.api.resolver.MigrationResolver;
 import org.seedstack.flyway.FlywayConfig;
 import org.seedstack.flyway.FlywayConfigOptions;
 import org.seedstack.jdbc.spi.JdbcProvider;
@@ -61,8 +65,7 @@ public class FlywayPlugin extends AbstractSeedPlugin {
     private Flyway buildFlyway(FlywayConfig flywayConfig, String dataSourceName,
             DataSource dataSource) {
 
-        Flyway flyway = Flyway.configure().dataSource(dataSource)
-                .locations(FLYWAY_DEFAULT_PATH + dataSourceName).load();
+        Flyway flyway = Flyway.configure().dataSource(dataSource).locations(FLYWAY_DEFAULT_PATH + dataSourceName).load();
 
         // Apply global options
         flyway = applyOptions(flyway, flywayConfig.getOptions());
@@ -94,8 +97,6 @@ public class FlywayPlugin extends AbstractSeedPlugin {
         Optional.ofNullable(options.getPlaceholderSuffix()).ifPresent(instanceOptions::placeholderSuffix);
         Optional.ofNullable(options.getTarget()).ifPresent(instanceOptions::target);
         Optional.ofNullable(options.getInstalledBy()).ifPresent(instanceOptions::installedBy);
-        Optional.ofNullable(options.getResolvers()).map(this::instantiateDefault).ifPresent(instanceOptions::resolvers);
-        Optional.ofNullable(options.getCallbacks()).map(this::instantiateDefault).ifPresent(instanceOptions::callbacks);
         Optional.ofNullable(options.getPlaceholders()).ifPresent(instanceOptions::placeholders);
         Optional.ofNullable(options.getPlaceholderReplacement()).ifPresent(instanceOptions::placeholderReplacement);
         Optional.ofNullable(options.getSkipDefaultResolvers()).ifPresent(instanceOptions::skipDefaultResolvers);
@@ -109,26 +110,31 @@ public class FlywayPlugin extends AbstractSeedPlugin {
         Optional.ofNullable(options.getIgnoreFutureMigrations()).ifPresent(instanceOptions::ignoreFutureMigrations);
         Optional.ofNullable(options.getCleanDisabled()).ifPresent(instanceOptions::cleanDisabled);
         Optional.ofNullable(options.getBaselineOnMigrate()).ifPresent(instanceOptions::baselineOnMigrate);
-
         Optional.ofNullable(options.getCreateSchemas()).ifPresent(instanceOptions::createSchemas);
         Optional.ofNullable(options.getDefaultSchema()).ifPresent(instanceOptions::defaultSchema);
         Optional.ofNullable(options.getIgnoreIgnoredMigrations()).ifPresent(instanceOptions::ignoreIgnoredMigrations);
         Optional.ofNullable(options.getIgnorePendingMigrations()).ifPresent(instanceOptions::ignorePendingMigrations);
         Optional.ofNullable(options.getInitSql()).ifPresent(instanceOptions::initSql);
-        Optional.ofNullable(options.getJavaMigrations()).map(this::instantiateDefault).ifPresent(instanceOptions::javaMigrations);
         Optional.ofNullable(options.getLockRetryCount()).ifPresent(instanceOptions::lockRetryCount);
         Optional.ofNullable(options.getResourceProvider()).map(Classes::instantiateDefault).ifPresent(instanceOptions::resourceProvider);
         Optional.ofNullable(options.getTablespace()).ifPresent(instanceOptions::tablespace);
         Optional.ofNullable(options.getValidateMigrationNaming()).ifPresent(instanceOptions::validateMigrationNaming);
 
-        
+        // Instancing Class[] items
+        Optional.ofNullable(options.getResolvers()).map(r -> this.instantiateDefault(r, MigrationResolver.class))
+                .ifPresent(instanceOptions::resolvers);
+        Optional.ofNullable(options.getCallbacks()).map(c -> this.instantiateDefault(c, Callback.class))
+                .ifPresent(instanceOptions::callbacks);
+        Optional.ofNullable(options.getJavaMigrations()).map(j -> this.instantiateDefault(j, JavaMigration.class))
+                .ifPresent(instanceOptions::javaMigrations);
+
         return instanceOptions.load();
 
     }
 
     @SuppressWarnings("unchecked")
-    private <U> U[] instantiateDefault(Class<? extends U>[] classes) {
-        return Arrays.stream(classes).map(Classes::instantiateDefault).toArray(size -> (U[]) new Object[size]);
+    private <U> U[] instantiateDefault(Class<? extends U>[] classes, Class<U> baseClass) {
+        return Arrays.stream(classes).map(Classes::instantiateDefault).toArray(size -> (U[]) Array.newInstance(baseClass, size));
     }
 
     Map<String, Flyway> getAllFlyway() {

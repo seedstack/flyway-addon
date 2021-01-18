@@ -16,7 +16,8 @@ jdbc:
       url: jdbc:hsqldb:mem:nomigration
     datasource4:
       url: jdbc:hsqldb:mem:notouching
-
+    datasource5:
+      url: jdbc:hsqldb:mem:javamigration
 flyway:
   datasources:
     datasource2:
@@ -24,3 +25,7 @@ flyway:
         baselineVersion: 1.1
         baselineDescription: baselineDescription
     datasource3: false
+    datasource5:
+      options:
+        javaMigrations:
+        - org.seedstack.flyway.migration.R__ConfigurationJavaMigration

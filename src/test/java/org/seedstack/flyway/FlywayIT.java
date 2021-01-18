@@ -16,10 +16,13 @@ import javax.inject.Inject;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.seedstack.flyway.migration.R__ConfigurationJavaMigration;
 import org.seedstack.flyway.sample.Repository;
 import org.seedstack.jdbc.Jdbc;
 import org.seedstack.seed.testing.junit4.SeedITRunner;
 import org.seedstack.seed.transaction.Transactional;
+
+import db.migration.datasource5.R__DiscoveredJavaMigration;
 
 @RunWith(SeedITRunner.class)
 public class FlywayIT {
@@ -43,7 +46,8 @@ public class FlywayIT {
         try {
             repository.getBar("tableTest2");
         } catch (SQLException e) {
-            Assertions.assertThat(e.getMessage().startsWith("java.sql.SQLSyntaxErrorException: user lacks privilege or object not found: TABLETEST2"));
+            Assertions.assertThat(
+                    e.getMessage().startsWith("java.sql.SQLSyntaxErrorException: user lacks privilege or object not found: TABLETEST2"));
             throw e;
         }
         fail("should have failed with missing table");
@@ -56,7 +60,15 @@ public class FlywayIT {
         try {
             repository.getBar("tableTest");
         } catch (SQLException e) {
-            Assertions.assertThat(e.getMessage().startsWith("java.sql.SQLSyntaxErrorException: user lacks privilege or object not found: TABLETEST"));
+            Assertions.assertThat(
+                    e.getMessage().startsWith("java.sql.SQLSyntaxErrorException: user lacks privilege or object not found: TABLETEST"));
         }
     }
+
+    @Test
+    public void testThatCodeMigrationIsExecuted() throws Exception {
+        Assertions.assertThat(R__DiscoveredJavaMigration.isApplied()).isTrue();
+        Assertions.assertThat(R__ConfigurationJavaMigration.isApplied()).isTrue();
+    }
+
 }
