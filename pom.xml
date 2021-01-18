@@ -1,6 +1,6 @@
 <!--
 
-    Copyright (c) 2013-2016, The SeedStack authors <http://seedstack.org>
+    Copyright © 2013-2020, The SeedStack authors <http://seedstack.org>
 
     This Source Code Form is subject to the terms of the Mozilla Public
     License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,17 +13,17 @@
     <parent>
         <groupId>org.seedstack.poms</groupId>
         <artifactId>parent-internal</artifactId>
-        <version>3.1.0</version>
+        <version>3.4.10</version>
     </parent>
 
     <groupId>org.seedstack.addons.flyway</groupId>
     <artifactId>flyway</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
 
     <properties>
-        <seed.version>3.3.0</seed.version>
-        <jdbc-addon.version>3.0.2</jdbc-addon.version>
-        <flyway.version>4.2.0</flyway.version>
+        <seed.version>3.11.0</seed.version>
+        <jdbc-addon.version>3.0.3</jdbc-addon.version>
+        <flyway.version>7.5.0</flyway.version>
 
         <compatibility.skip>true</compatibility.skip>
 
@@ -41,7 +41,7 @@
                             <includedLicense>Apache 2</includedLicense>
                             <includedLicense>BSD</includedLicense>
                             <includedLicense>CDDL</includedLicense>
-                            <includedLicense>MIT License</includedLicense>
+                            <includedLicense>MIT</includedLicense>
                             <includedLicense>LGPL 2.1</includedLicense>
                             <includedLicense>LGPL 3.0</includedLicense>
                             <includedLicense>MPL 2.0</includedLicense>
@@ -58,6 +58,9 @@
                             <licenseMerge>Apache 2|Apache 2.0</licenseMerge>
                             <licenseMerge>Apache 2|Apache License, version 2.0</licenseMerge>
                             <licenseMerge>Apache 2|Apache License Version 2.0</licenseMerge>
+                            <licenseMerge>MIT|The MIT License</licenseMerge>
+                            <licenseMerge>MIT|MIT License</licenseMerge>
+                            <licenseMerge>MIT|MIT license</licenseMerge>
                             <licenseMerge>BSD|The New BSD License</licenseMerge>
                             <licenseMerge>CDDL|CDDL + GPLv2 with classpath exception</licenseMerge>
                             <licenseMerge>LGPL 3.0|GNU Lesser Public License</licenseMerge>
@@ -86,12 +89,23 @@
             <artifactId>flyway-core</artifactId>
             <version>${flyway.version}</version>
         </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>${javax.validation.version}</version>
+        </dependency>
 
         <!-- TEST -->
         <dependency>
             <groupId>org.seedstack.seed</groupId>
-            <artifactId>seed-testing</artifactId>
+            <artifactId>seed-testing-junit4</artifactId>
             <version>${seed.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -103,7 +117,7 @@
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
-            <version>2.3.3</version>
+            <version>2.5.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

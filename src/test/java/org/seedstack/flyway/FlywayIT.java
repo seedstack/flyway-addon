@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2013-2016, The SeedStack authors <http://seedstack.org>
+/*
+ * Copyright © 2013-2020, The SeedStack authors <http://seedstack.org>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,22 +7,25 @@
  */
 package org.seedstack.flyway;
 
+import static junit.framework.TestCase.fail;
+
+import java.sql.SQLException;
+
+import javax.inject.Inject;
+
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.seedstack.flyway.migration.R__ConfigurationJavaMigration;
 import org.seedstack.flyway.sample.Repository;
 import org.seedstack.jdbc.Jdbc;
-import org.seedstack.seed.it.AbstractSeedIT;
-import org.seedstack.seed.it.SeedITRunner;
+import org.seedstack.seed.testing.junit4.SeedITRunner;
 import org.seedstack.seed.transaction.Transactional;
 
-import javax.inject.Inject;
-import java.sql.SQLException;
-
-import static junit.framework.TestCase.fail;
+import db.migration.datasource5.R__DiscoveredJavaMigration;
 
 @RunWith(SeedITRunner.class)
-public class FlywayIT extends AbstractSeedIT {
+public class FlywayIT {
     @Inject
     private Repository repository;
 
@@ -43,7 +46,8 @@ public class FlywayIT extends AbstractSeedIT {
         try {
             repository.getBar("tableTest2");
         } catch (SQLException e) {
-            Assertions.assertThat(e.getMessage().startsWith("java.sql.SQLSyntaxErrorException: user lacks privilege or object not found: TABLETEST2"));
+            Assertions.assertThat(
+                    e.getMessage().startsWith("java.sql.SQLSyntaxErrorException: user lacks privilege or object not found: TABLETEST2"));
             throw e;
         }
         fail("should have failed with missing table");
@@ -56,7 +60,15 @@ public class FlywayIT extends AbstractSeedIT {
         try {
             repository.getBar("tableTest");
         } catch (SQLException e) {
-            Assertions.assertThat(e.getMessage().startsWith("java.sql.SQLSyntaxErrorException: user lacks privilege or object not found: TABLETEST"));
+            Assertions.assertThat(
+                    e.getMessage().startsWith("java.sql.SQLSyntaxErrorException: user lacks privilege or object not found: TABLETEST"));
         }
     }
+
+    @Test
+    public void testThatCodeMigrationIsExecuted() throws Exception {
+        Assertions.assertThat(R__DiscoveredJavaMigration.isApplied()).isTrue();
+        Assertions.assertThat(R__ConfigurationJavaMigration.isApplied()).isTrue();
+    }
+
 }

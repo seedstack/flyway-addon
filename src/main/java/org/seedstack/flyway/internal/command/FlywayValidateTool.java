@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2013-2016, The SeedStack authors <http://seedstack.org>
+/*
+ * Copyright © 2013-2020, The SeedStack authors <http://seedstack.org>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,6 +9,7 @@ package org.seedstack.flyway.internal.command;
 
 import org.flywaydb.core.Flyway;
 import org.seedstack.flyway.internal.AbstractFlywayTool;
+import org.seedstack.flyway.internal.FlywayUtils;
 import org.seedstack.seed.cli.CliOption;
 
 public class FlywayValidateTool extends AbstractFlywayTool {
@@ -23,8 +24,8 @@ public class FlywayValidateTool extends AbstractFlywayTool {
     @Override
     public Integer call() throws Exception {
         Flyway flyway = getFlyway();
-        if (this.target != null) {
-            flyway.setTargetAsString(this.target);
+        if (target != null) {
+            flyway = FlywayUtils.getFlywayBuilderFromInstance(getFlyway()).target(target).load();
         }
         System.out.println("Flyway: validating datasource " + getDatasource() + " for " + target);
         flyway.validate();
