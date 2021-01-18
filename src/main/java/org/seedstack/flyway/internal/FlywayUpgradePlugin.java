@@ -14,6 +14,7 @@ import java.util.Optional;
 
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.Location;
+import org.flywaydb.core.internal.scanner.Scanner;
 import org.seedstack.flyway.FlywayConfig;
 import org.seedstack.flyway.FlywayConfig.DataSourceConfig;
 import org.seedstack.flyway.spi.FlywayProvider;
@@ -61,10 +62,9 @@ public class FlywayUpgradePlugin extends AbstractSeedPlugin implements FlywayPro
     }
 
     private void automaticMigration(Flyway flyway, String dataSourceName, DataSourceConfig dataSourceConf) {
-        if (!locationExists(flyway) && !codeMigrationExists(flyway)) {
+        if (!locationExists(flyway)) {
             // no migration if no script is present
-            LOGGER.info("Ignoring Flyway migration for datasource without scripts/code generation {}", dataSourceName);
-            return;
+            LOGGER.info("Flyway migration for datasource {} has no scripts", dataSourceName);
         }
         if (dataSourceConf != null) {
             if (!dataSourceConf.isEnabled()) {
@@ -79,10 +79,6 @@ public class FlywayUpgradePlugin extends AbstractSeedPlugin implements FlywayPro
         }
         LOGGER.info("Migrating datasource {} to {}", dataSourceName, flyway.getConfiguration().getTarget());
         flyway.migrate();
-    }
-
-    private boolean codeMigrationExists(Flyway flyway) {
-        return flyway.getConfiguration().getJavaMigrations() != null;
     }
 
     private boolean locationExists(Flyway flyway) {
