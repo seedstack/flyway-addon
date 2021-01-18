@@ -11,269 +11,362 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.flywaydb.core.api.ResourceProvider;
 import org.flywaydb.core.api.callback.Callback;
+import org.flywaydb.core.api.migration.JavaMigration;
 import org.flywaydb.core.api.resolver.MigrationResolver;
 
 public class FlywayConfigOptions {
-    private String[] locations;
-    private String[] schemas;
-    private String baselineVersion;
     private String baselineDescription;
-    private String table;
-    private String sqlMigrationPrefix;
+    private Boolean baselineOnMigrate;
+    private String baselineVersion;
+    private Class<? extends Callback>[] callbacks;
+    private Boolean cleanDisabled;
+    private Boolean cleanOnValidationError;
+    private Boolean createSchemas;
+    private String defaultSchema;
+    private String encoding;
+    private Boolean group;
+    private Boolean ignoreFutureMigrations;
+    private Boolean ignoreIgnoredMigrations;
+    private Boolean ignoreMissingMigrations;
+    private Boolean ignorePendingMigrations;
+    private String initSql;
+    private String installedBy;
+    private Class<? extends JavaMigration>[] javaMigrations;
+    private String[] locations;
+    private Integer lockRetryCount;
+    private Boolean mixed;
+    private Boolean outOfOrder;
+    private String placeholderPrefix;
+    private Boolean placeholderReplacement;
+    private Map<String, String> placeholders;
+    private String placeholderSuffix;
     private String repeatableSqlMigrationPrefix;
+    private Class<? extends MigrationResolver>[] resolvers;
+    private Class<? extends ResourceProvider> resourceProvider;
+    private String[] schemas;
+    private Boolean skipDefaultCallbacks;
+    private Boolean skipDefaultResolvers;
+    private String sqlMigrationPrefix;
     private String sqlMigrationSeparator;
     private String sqlMigrationSuffix;
-    private String encoding;
-    private String placeholderPrefix;
-    private String placeholderSuffix;
+    private String table;
+    private String tablespace;
     private String target;
-    private String installedBy;
-    private Class<? extends MigrationResolver>[] resolvers;
-    private Class<? extends Callback>[] callbacks;
-    private Map<String, String> placeholders;
-    private Boolean placeholderReplacement;
-    private Boolean skipDefaultResolvers;
-    private Boolean skipDefaultCallbacks;
-    private Boolean outOfOrder;
+    private Boolean validateMigrationNaming;
     private Boolean validateOnMigrate;
-    private Boolean cleanOnValidationError;
-    private Boolean mixed;
-    private Boolean group;
-    private Boolean ignoreMissingMigrations;
-    private Boolean ignoreFutureMigrations;
-    private Boolean cleanDisabled;
-    private Boolean baselineOnMigrate;
-
-    public String[] getLocations() {
-        return locations == null ? null : locations.clone();
-    }
-
-    public void setLocations(String[] locations) {
-        this.locations = locations == null ? null : locations.clone();
-    }
-
-    public String[] getSchemas() {
-        return schemas == null ? null : schemas.clone();
-    }
-
-    public void setSchemas(String[] schemas) {
-        this.schemas = schemas == null ? null : schemas.clone();
-    }
-
-    public String getBaselineVersion() {
-        return baselineVersion;
-    }
-
-    public void setBaselineVersion(String baselineVersion) {
-        this.baselineVersion = baselineVersion;
-    }
 
     public String getBaselineDescription() {
         return baselineDescription;
-    }
-
-    public void setBaselineDescription(String baselineDescription) {
-        this.baselineDescription = baselineDescription;
-    }
-
-    public String getTable() {
-        return table;
-    }
-
-    public void setTable(String table) {
-        this.table = table;
-    }
-
-    public String getSqlMigrationPrefix() {
-        return sqlMigrationPrefix;
-    }
-
-    public void setSqlMigrationPrefix(String sqlMigrationPrefix) {
-        this.sqlMigrationPrefix = sqlMigrationPrefix;
-    }
-
-    public String getRepeatableSqlMigrationPrefix() {
-        return repeatableSqlMigrationPrefix;
-    }
-
-    public void setRepeatableSqlMigrationPrefix(String repeatableSqlMigrationPrefix) {
-        this.repeatableSqlMigrationPrefix = repeatableSqlMigrationPrefix;
-    }
-
-    public String getSqlMigrationSeparator() {
-        return sqlMigrationSeparator;
-    }
-
-    public void setSqlMigrationSeparator(String sqlMigrationSeparator) {
-        this.sqlMigrationSeparator = sqlMigrationSeparator;
-    }
-
-    public String getSqlMigrationSuffix() {
-        return sqlMigrationSuffix;
-    }
-
-    public void setSqlMigrationSuffix(String sqlMigrationSuffix) {
-        this.sqlMigrationSuffix = sqlMigrationSuffix;
-    }
-
-    public String getEncoding() {
-        return encoding;
-    }
-
-    public void setEncoding(String encoding) {
-        this.encoding = encoding;
-    }
-
-    public String getPlaceholderPrefix() {
-        return placeholderPrefix;
-    }
-
-    public void setPlaceholderPrefix(String placeholderPrefix) {
-        this.placeholderPrefix = placeholderPrefix;
-    }
-
-    public String getPlaceholderSuffix() {
-        return placeholderSuffix;
-    }
-
-    public void setPlaceholderSuffix(String placeholderSuffix) {
-        this.placeholderSuffix = placeholderSuffix;
-    }
-
-    public String getTarget() {
-        return target;
-    }
-
-    public void setTarget(String target) {
-        this.target = target;
-    }
-
-    public String getInstalledBy() {
-        return installedBy;
-    }
-
-    public void setInstalledBy(String installedBy) {
-        this.installedBy = installedBy;
-    }
-
-    public Class<? extends MigrationResolver>[] getResolvers() {
-        return resolvers == null ? null : resolvers.clone();
-    }
-
-    public void setResolvers(Class<? extends MigrationResolver>[] resolvers) {
-        this.resolvers = resolvers == null ? null : resolvers.clone();
-    }
-
-    public Class<? extends Callback>[] getCallbacks() {
-        return callbacks == null ? null : callbacks.clone();
-    }
-
-    public void setCallbacks(Class<? extends Callback>[] callbacks) {
-        this.callbacks = callbacks.clone();
-    }
-
-    public Map<String, String> getPlaceholders() {
-        return placeholders == null ? null : Collections.unmodifiableMap(placeholders);
-    }
-
-    public void setPlaceholders(Map<String, String> placeholders) {
-        this.placeholders = placeholders == null ? null : new HashMap<>(placeholders);
-    }
-
-    public Boolean getPlaceholderReplacement() {
-        return placeholderReplacement;
-    }
-
-    public void setPlaceholderReplacement(Boolean placeholderReplacement) {
-        this.placeholderReplacement = placeholderReplacement;
-    }
-
-    public Boolean getSkipDefaultResolvers() {
-        return skipDefaultResolvers;
-    }
-
-    public void setSkipDefaultResolvers(Boolean skipDefaultResolvers) {
-        this.skipDefaultResolvers = skipDefaultResolvers;
-    }
-
-    public Boolean getSkipDefaultCallbacks() {
-        return skipDefaultCallbacks;
-    }
-
-    public void setSkipDefaultCallbacks(Boolean skipDefaultCallbacks) {
-        this.skipDefaultCallbacks = skipDefaultCallbacks;
-    }
-
-    public Boolean getOutOfOrder() {
-        return outOfOrder;
-    }
-
-    public void setOutOfOrder(Boolean outOfOrder) {
-        this.outOfOrder = outOfOrder;
-    }
-
-    public Boolean getValidateOnMigrate() {
-        return validateOnMigrate;
-    }
-
-    public void setValidateOnMigrate(Boolean validateOnMigrate) {
-        this.validateOnMigrate = validateOnMigrate;
-    }
-
-    public Boolean getCleanOnValidationError() {
-        return cleanOnValidationError;
-    }
-
-    public void setCleanOnValidationError(Boolean cleanOnValidationError) {
-        this.cleanOnValidationError = cleanOnValidationError;
-    }
-
-    public Boolean getMixed() {
-        return mixed;
-    }
-
-    public void setMixed(Boolean mixed) {
-        this.mixed = mixed;
-    }
-
-    public Boolean getGroup() {
-        return group;
-    }
-
-    public void setGroup(Boolean group) {
-        this.group = group;
-    }
-
-    public Boolean getIgnoreMissingMigrations() {
-        return ignoreMissingMigrations;
-    }
-
-    public void setIgnoreMissingMigrations(Boolean ignoreMissingMigrations) {
-        this.ignoreMissingMigrations = ignoreMissingMigrations;
-    }
-
-    public Boolean getIgnoreFutureMigrations() {
-        return ignoreFutureMigrations;
-    }
-
-    public void setIgnoreFutureMigrations(Boolean ignoreFutureMigrations) {
-        this.ignoreFutureMigrations = ignoreFutureMigrations;
-    }
-
-    public Boolean getCleanDisabled() {
-        return cleanDisabled;
-    }
-
-    public void setCleanDisabled(Boolean cleanDisabled) {
-        this.cleanDisabled = cleanDisabled;
     }
 
     public Boolean getBaselineOnMigrate() {
         return baselineOnMigrate;
     }
 
+    public String getBaselineVersion() {
+        return baselineVersion;
+    }
+
+    public Class<? extends Callback>[] getCallbacks() {
+        return callbacks == null ? null : callbacks.clone();
+    }
+
+    public Boolean getCleanDisabled() {
+        return cleanDisabled;
+    }
+
+    public Boolean getCleanOnValidationError() {
+        return cleanOnValidationError;
+    }
+
+    public Boolean getCreateSchemas() {
+        return createSchemas;
+    }
+
+    public String getDefaultSchema() {
+        return defaultSchema;
+    }
+
+    public String getEncoding() {
+        return encoding;
+    }
+
+    public Boolean getGroup() {
+        return group;
+    }
+
+    public Boolean getIgnoreFutureMigrations() {
+        return ignoreFutureMigrations;
+    }
+
+    public Boolean getIgnoreIgnoredMigrations() {
+        return ignoreIgnoredMigrations;
+
+    }
+
+    public Boolean getIgnoreMissingMigrations() {
+        return ignoreMissingMigrations;
+    }
+
+    public Boolean getIgnorePendingMigrations() {
+        return ignorePendingMigrations;
+    }
+
+    public String getInitSql() {
+        return initSql;
+    }
+
+    public String getInstalledBy() {
+        return installedBy;
+    }
+
+    public Class<? extends JavaMigration>[] getJavaMigrations() {
+        return javaMigrations == null ? null : javaMigrations.clone();
+    }
+
+    public String[] getLocations() {
+        return locations == null ? null : locations.clone();
+    }
+
+    public Integer getLockRetryCount() {
+        return lockRetryCount;
+    }
+
+    public Boolean getMixed() {
+        return mixed;
+    }
+
+    public Boolean getOutOfOrder() {
+        return outOfOrder;
+    }
+
+    public String getPlaceholderPrefix() {
+        return placeholderPrefix;
+    }
+
+    public Boolean getPlaceholderReplacement() {
+        return placeholderReplacement;
+    }
+
+    public Map<String, String> getPlaceholders() {
+        return placeholders == null ? null : Collections.unmodifiableMap(placeholders);
+    }
+
+    public String getPlaceholderSuffix() {
+        return placeholderSuffix;
+    }
+
+    public String getRepeatableSqlMigrationPrefix() {
+        return repeatableSqlMigrationPrefix;
+    }
+
+    public Class<? extends MigrationResolver>[] getResolvers() {
+        return resolvers == null ? null : resolvers.clone();
+    }
+
+    public Class<? extends ResourceProvider> getResourceProvider() {
+        return resourceProvider;
+    }
+
+    public String[] getSchemas() {
+        return schemas == null ? null : schemas.clone();
+    }
+
+    public Boolean getSkipDefaultCallbacks() {
+        return skipDefaultCallbacks;
+    }
+
+    public Boolean getSkipDefaultResolvers() {
+        return skipDefaultResolvers;
+    }
+
+    public String getSqlMigrationPrefix() {
+        return sqlMigrationPrefix;
+    }
+
+    public String getSqlMigrationSeparator() {
+        return sqlMigrationSeparator;
+    }
+
+    public String getSqlMigrationSuffix() {
+        return sqlMigrationSuffix;
+    }
+
+    public String getTable() {
+        return table;
+    }
+
+    public String getTablespace() {
+        return tablespace;
+    }
+
+    public String getTarget() {
+        return target;
+    }
+
+    public Boolean getValidateMigrationNaming() {
+        return validateMigrationNaming;
+    }
+
+    public Boolean getValidateOnMigrate() {
+        return validateOnMigrate;
+    }
+
+    public void setBaselineDescription(String baselineDescription) {
+        this.baselineDescription = baselineDescription;
+    }
+
     public void setBaselineOnMigrate(Boolean baselineOnMigrate) {
         this.baselineOnMigrate = baselineOnMigrate;
+    }
+
+    public void setBaselineVersion(String baselineVersion) {
+        this.baselineVersion = baselineVersion;
+    }
+
+    public void setCallbacks(Class<? extends Callback>[] callbacks) {
+        this.callbacks = callbacks.clone();
+    }
+
+    public void setCleanDisabled(Boolean cleanDisabled) {
+        this.cleanDisabled = cleanDisabled;
+    }
+
+    public void setCleanOnValidationError(Boolean cleanOnValidationError) {
+        this.cleanOnValidationError = cleanOnValidationError;
+    }
+
+    public void setCreateSchemas(Boolean createSchemas) {
+        this.createSchemas = createSchemas;
+    }
+
+    public void setDefaultSchema(String defaultSchema) {
+        this.defaultSchema = defaultSchema;
+    }
+
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
+
+    public void setGroup(Boolean group) {
+        this.group = group;
+    }
+
+    public void setIgnoreFutureMigrations(Boolean ignoreFutureMigrations) {
+        this.ignoreFutureMigrations = ignoreFutureMigrations;
+    }
+
+    public void setIgnoreIgnoredMigrations(Boolean ignoreIgnoredMigrations) {
+        this.ignoreIgnoredMigrations = ignoreIgnoredMigrations;
+    }
+
+    public void setIgnoreMissingMigrations(Boolean ignoreMissingMigrations) {
+        this.ignoreMissingMigrations = ignoreMissingMigrations;
+    }
+
+    public void setIgnorePendingMigrations(Boolean ignorePendingMigrations) {
+        this.ignorePendingMigrations = ignorePendingMigrations;
+    }
+
+    public void setInitSql(String initSql) {
+        this.initSql = initSql;
+    }
+
+    public void setInstalledBy(String installedBy) {
+        this.installedBy = installedBy;
+    }
+
+    public void setJavaMigrations(Class<? extends JavaMigration>[] javaMigrations) {
+        this.javaMigrations = javaMigrations;
+    }
+
+    public void setLocations(String[] locations) {
+        this.locations = locations == null ? null : locations.clone();
+    }
+
+    public void setLockRetryCount(Integer lockRetryCount) {
+        this.lockRetryCount = lockRetryCount;
+    }
+
+    public void setMixed(Boolean mixed) {
+        this.mixed = mixed;
+    }
+
+    public void setOutOfOrder(Boolean outOfOrder) {
+        this.outOfOrder = outOfOrder;
+    }
+
+    public void setPlaceholderPrefix(String placeholderPrefix) {
+        this.placeholderPrefix = placeholderPrefix;
+    }
+
+    public void setPlaceholderReplacement(Boolean placeholderReplacement) {
+        this.placeholderReplacement = placeholderReplacement;
+    }
+
+    public void setPlaceholders(Map<String, String> placeholders) {
+        this.placeholders = placeholders == null ? null : new HashMap<>(placeholders);
+    }
+
+    public void setPlaceholderSuffix(String placeholderSuffix) {
+        this.placeholderSuffix = placeholderSuffix;
+    }
+
+    public void setRepeatableSqlMigrationPrefix(String repeatableSqlMigrationPrefix) {
+        this.repeatableSqlMigrationPrefix = repeatableSqlMigrationPrefix;
+    }
+
+    public void setResolvers(Class<? extends MigrationResolver>[] resolvers) {
+        this.resolvers = resolvers == null ? null : resolvers.clone();
+    }
+
+    public void setResourceProvider(Class<? extends ResourceProvider> resourceProvider) {
+        this.resourceProvider = resourceProvider;
+    }
+
+    public void setSchemas(String[] schemas) {
+        this.schemas = schemas == null ? null : schemas.clone();
+    }
+
+    public void setSkipDefaultCallbacks(Boolean skipDefaultCallbacks) {
+        this.skipDefaultCallbacks = skipDefaultCallbacks;
+    }
+
+    public void setSkipDefaultResolvers(Boolean skipDefaultResolvers) {
+        this.skipDefaultResolvers = skipDefaultResolvers;
+    }
+
+    public void setSqlMigrationPrefix(String sqlMigrationPrefix) {
+        this.sqlMigrationPrefix = sqlMigrationPrefix;
+    }
+
+    public void setSqlMigrationSeparator(String sqlMigrationSeparator) {
+        this.sqlMigrationSeparator = sqlMigrationSeparator;
+    }
+
+    public void setSqlMigrationSuffix(String sqlMigrationSuffix) {
+        this.sqlMigrationSuffix = sqlMigrationSuffix;
+    }
+
+    public void setTable(String table) {
+        this.table = table;
+    }
+
+    public void setTablespace(String tablespace) {
+        this.tablespace = tablespace;
+    }
+
+    public void setTarget(String target) {
+        this.target = target;
+    }
+
+    public void setValidateMigrationNaming(Boolean validateMigrationNaming) {
+        this.validateMigrationNaming = validateMigrationNaming;
+    }
+
+    public void setValidateOnMigrate(Boolean validateOnMigrate) {
+        this.validateOnMigrate = validateOnMigrate;
     }
 }

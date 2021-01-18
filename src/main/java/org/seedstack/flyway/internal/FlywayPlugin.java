@@ -110,6 +110,18 @@ public class FlywayPlugin extends AbstractSeedPlugin {
         Optional.ofNullable(options.getCleanDisabled()).ifPresent(instanceOptions::cleanDisabled);
         Optional.ofNullable(options.getBaselineOnMigrate()).ifPresent(instanceOptions::baselineOnMigrate);
 
+        Optional.ofNullable(options.getCreateSchemas()).ifPresent(instanceOptions::createSchemas);
+        Optional.ofNullable(options.getDefaultSchema()).ifPresent(instanceOptions::defaultSchema);
+        Optional.ofNullable(options.getIgnoreIgnoredMigrations()).ifPresent(instanceOptions::ignoreIgnoredMigrations);
+        Optional.ofNullable(options.getIgnorePendingMigrations()).ifPresent(instanceOptions::ignorePendingMigrations);
+        Optional.ofNullable(options.getInitSql()).ifPresent(instanceOptions::initSql);
+        Optional.ofNullable(options.getJavaMigrations()).map(this::instantiateDefault).ifPresent(instanceOptions::javaMigrations);
+        Optional.ofNullable(options.getLockRetryCount()).ifPresent(instanceOptions::lockRetryCount);
+        Optional.ofNullable(options.getResourceProvider()).map(Classes::instantiateDefault).ifPresent(instanceOptions::resourceProvider);
+        Optional.ofNullable(options.getTablespace()).ifPresent(instanceOptions::tablespace);
+        Optional.ofNullable(options.getValidateMigrationNaming()).ifPresent(instanceOptions::validateMigrationNaming);
+
+        
         return instanceOptions.load();
 
     }
