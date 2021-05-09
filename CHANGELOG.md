@@ -1,12 +1,8 @@
-# Version 2.0.0 (2021-01-18)
-
-* [upd] Updated to seed 3.11.0
-* [upd] Updated flyway from 4.2.0 to 7.5.0
+# Version 2.0.0 (2021-05-09)
 
 * [new] Adds more configuration keys to available configuration
-
 * [fix] Class Type Arrays properties now work as intended instead of being skipped
-
+* [chg] Update Flyway to 7.8.2
 
 # Version 1.0.0 (2017-08-01)
 
